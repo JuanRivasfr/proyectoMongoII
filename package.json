@@ -1,0 +1,15 @@
+{
+  "name": "cinecampus",
+  "version": "1.0.0",
+  "description": "📕 **Título: CineCampus**",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --env-file=.env main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^6.8.0"
+  }
+}
