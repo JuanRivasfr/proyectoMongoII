@@ -1,4 +1,8 @@
-import { example } from "./js/modules/example.js";
+import { usuarios } from "./js/modules/usuarios.js";
+import { boletas } from "./js/modules/boletas.js";
+import { funciones } from "./js/modules/funciones.js";
+import { peliculas } from "./js/modules/peliculas.js";
+import { salas } from "./js/modules/salas.js";
 
-let doy = new example()
-console.log(await doy.getAllMatch())  
+let check = new salas()
+console.log(await check.getAllMatch())  
