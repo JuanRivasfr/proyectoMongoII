@@ -21,7 +21,7 @@ let check = new boletas()
 //Caso de Uso 5
 const objReservaBoletos = {
     idFuncion : new ObjectId("66a59bcb2de7f97b635de2dc"),
-    asientos: ["D1"],
+    asientos: ["D2"],
     idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
 }
 console.log(await check.reservarAsientos(objReservaBoletos))

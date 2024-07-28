@@ -195,9 +195,9 @@ export class boletas extends connect {
             }
           }
           if(tipo_compra === "reserva"){
-            return{sucess : "Se compraron los boletos de forma exitosa",
+            return{sucess : "Se reservaron los boletos de forma exitosa",
               precioTotal : precioTotal
-            }
+            } 
           }
         }
         console.log(res);
