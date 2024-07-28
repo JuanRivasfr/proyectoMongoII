@@ -4,5 +4,5 @@ import { funciones } from "./js/modules/funciones.js";
 import { peliculas } from "./js/modules/peliculas.js";
 import { salas } from "./js/modules/salas.js";
 
-let check = new salas()
-console.log(await check.getAllMatch())  
+let check = new peliculas()
+console.log(await check.getAllMovies())  
