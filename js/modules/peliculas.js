@@ -1,4 +1,5 @@
 import { connect } from "../../helpers/db/connect.js";
+import { ObjectId } from "mongodb";
 
 export class peliculas extends connect {
     static instance
@@ -56,5 +57,31 @@ export class peliculas extends connect {
             }
         ]).toArray()
         return(JSON.stringify(res, null, 2))    
+    }
+
+
+    //Caso de uso #2
+    async getOneMovie(idPelicula){
+
+        const peliculaExiste = await this.collection.findOne({_id : new ObjectId(idPelicula)})
+        if(!peliculaExiste){
+            return { error : "La pelicula no existe"}
+        }
+
+        let res = await this.collection.aggregate([
+            {
+                $match: {
+                _id: new ObjectId(idPelicula)
+                }
+            },
+            {
+                $project: {
+                "funciones._id" : 0,
+                "funciones.pelicula_id" : 0,
+                "funciones.sala_id" : 0
+                }
+            }
+        ]).toArray()
+        return res
     }
 }

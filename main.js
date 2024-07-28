@@ -5,4 +5,4 @@ import { peliculas } from "./js/modules/peliculas.js";
 import { salas } from "./js/modules/salas.js";
 
 let check = new peliculas()
-console.log(await check.getAllMovies())  
+console.log(await check.getAllMovies("66a55f092de7f97b635de2c8"))
