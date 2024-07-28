@@ -189,15 +189,119 @@ export class boletas extends connect {
         let precioTotal = precioSala * totalAsientosComprados
         
         if(res.acknowledged === true){
+          if(tipo_compra === "compra"){
             return{sucess : "Se compraron los boletos de forma exitosa",
-                    precioTotal : precioTotal
+              precioTotal : precioTotal
             }
+          }
+          if(tipo_compra === "reserva"){
+            return{sucess : "Se compraron los boletos de forma exitosa",
+              precioTotal : precioTotal
+            }
+          }
         }
         console.log(res);
         
     }
 
-    async reservarAsientos(){
-        
+    async reservarAsientos(obj){
+      let {idFuncion, asientos, idUsuario} = obj
+
+      const funcionExiste = await this.db.collection("funciones").findOne({_id : idFuncion})
+        if(!funcionExiste){
+            return { error : "La funcion no existe"}
+        }
+
+      const usuarioExiste = await this.db.collection("usuarios").findOne({_id : idUsuario})
+      if(!usuarioExiste){
+          return { error : "El usuario no existe"}
+      } 
+
+      let res = await this.db.collection("funciones").aggregate(
+        [
+          {
+              $match: {
+                  _id: new ObjectId("66a59bcb2de7f97b635de2dc")
+              }
+          },
+          {
+              $lookup: {
+                  from: "salas",
+                  localField: "sala_id",
+                  foreignField: "_id",
+                  as: "salas"
+              }
+          },
+          {
+              $unwind: "$salas"
+          },
+          {
+              $lookup: {
+                  from: "boletas",
+                  localField: "_id",
+                  foreignField: "funcion_id",
+                  as: "boletas"
+              }
+          },
+          {
+              $group: {
+                  _id: "$_id",
+                  fieldN: {
+                      $push: "$boletas.asientos"
+                  },
+                  asientosTotales: {
+                      $first: "$salas.asientos"
+                  },
+                  precio: { $first: "$salas.precio" }
+              }
+          },
+          {
+              $unwind: "$fieldN"
+          },
+          {
+              $project: {
+                  asientosOcupados: {
+                      $reduce: {
+                          input: "$fieldN",
+                          initialValue: [],
+                          in: {
+                              $concatArrays: ["$$value", "$$this"]
+                          }
+                      }
+                  },
+                  asientosTotales: 1,
+                  precio: 1,
+                  _id: 0
+              }
+          }
+        ]
+      ).toArray()
+      
+      let {asientosTotales, precio, asientosOcupados} = res[0]
+
+      const asientosCombinados = [...asientosTotales, ...asientosOcupados]
+
+      const asientosDisponibles = asientosTotales.filter(val => {
+          return (asientosTotales.includes(val) && !asientosOcupados.includes(val))
+      })
+
+      const asientosConflictivos = asientosTotales.filter(val => {
+        return (!asientosDisponibles.includes(val) && asientos.includes(val))
+      })
+      
+      if(asientosConflictivos.length > 0){
+        return{ error : `Los siguientes asientos estan ocupados: ${asientosConflictivos.join(", ")}`}
+      }
+
+      const asientosNoExisten = asientos.filter(val => {
+        return (asientos.includes(val) && !asientosTotales.includes(val))
+      })
+
+      if(asientosNoExisten.length > 0){
+        return{ error : `Los siguientes asientos no existen: ${asientosNoExisten.join(", ")}`}
+      }
+
+      return(this.agregarBoletos(asientos, idFuncion, idUsuario, "reserva", precio))
+
     }
 }
