@@ -196,4 +196,8 @@ export class boletas extends connect {
         console.log(res);
         
     }
+
+    async reservarAsientos(){
+        
+    }
 }
