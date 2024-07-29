@@ -5,7 +5,7 @@ import { peliculas } from "./js/modules/peliculas.js";
 import { salas } from "./js/modules/salas.js";
 import { ObjectId } from "mongodb";
 
-let check = new boletas()
+let check = new usuarios()
 //Caso de Uso 3
 // const objCompraBoletos = {
 //     idPelicula : new ObjectId("66a55f092de7f97b635de2c8"),
@@ -29,9 +29,24 @@ let check = new boletas()
 // const idBoleto = new ObjectId("66a67d06e73d622e5f052331")
 // console.log(await check.validarReserva(idBoleto))
 //Caso de uso 7
-const objDescuento = {
-    sucess : "Se reservaron los boletos de forma exitosa",
-    precioTotal :   19.5,
-    usuarioId : new ObjectId("66a55b542de7f97b635de2c4")
-    } 
-    console.log(await check.aplicarDescuento(objDescuento)) 
+// const objDescuento = {
+//     sucess : "Se reservaron los boletos de forma exitosa",
+//     precioTotal :   19.5,
+//     usuarioId : new ObjectId("66a55b542de7f97b635de2c4")
+//     } 
+//     console.log(await check.aplicarDescuento(objDescuento)) 
+//Caso de uso 8
+const objUsuario ={
+    identificacion: 124567,
+    nombre: "Juan",
+    apellido: "Rivas",
+    nick: "rivoo",
+    email: "sebasriurr@gmail.com",
+    telefono: ["4561564789"],
+    categoria: {
+        nombre: "estandar",
+        descuento: 0
+    },
+    tarjeta: []
+}
+console.log(await check.validacionUsuario(objUsuario)) 
