@@ -19,9 +19,12 @@ let check = new boletas()
 // const idFuncion = new ObjectId("66a59bcb2de7f97b635de2dc")
 // console.log(await check.disponibilidadAsientos(idFuncion));
 //Caso de Uso 5
-const objReservaBoletos = {
-    idFuncion : new ObjectId("66a59bcb2de7f97b635de2dc"),
-    asientos: ["D2"],
-    idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
-}
-console.log(await check.reservarAsientos(objReservaBoletos))
+// const objReservaBoletos = {
+//     idFuncion : new ObjectId("66a59bcb2de7f97b635de2dc"),
+//     asientos: ["D2"],
+//     idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
+// }
+// console.log(await check.reservarAsientos(objReservaBoletos))
+//Caso de Uso 6
+const idBoleto = new ObjectId("66a67d06e73d622e5f052331")
+console.log(await check.validarReserva(idBoleto))

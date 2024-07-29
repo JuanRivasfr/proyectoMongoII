@@ -304,4 +304,31 @@ export class boletas extends connect {
       return(this.agregarBoletos(asientos, idFuncion, idUsuario, "reserva", precio))
 
     }
+
+    async validarReserva(idBoleto){
+      const boletoExiste = await this.collection.findOne({_id : new ObjectId(idBoleto)})
+        if(!boletoExiste){
+            return { error : "El boleto no existe"}
+      }
+      
+      let {_id, asientos, fecha_adquisicion, funcion_id, cliente_id, tipo_compra} = boletoExiste
+      
+
+      if(tipo_compra === "compra"){
+        return{ error : "Los boletos deben ser una reserva no una compra"}
+      }
+
+      return this.eliminarReserva(idBoleto)
+    }
+
+    async eliminarReserva(idBoleto){
+      let res = await this.collection.deleteOne({
+        _id : idBoleto
+      })
+
+      if(res.acknowledged === true){
+        return {sucess: "La reserva se ha eliminado de forma correcta"}
+      }
+      
+    }
 }
