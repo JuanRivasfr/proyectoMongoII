@@ -1,6 +1,20 @@
-user = 
+user = adminCine
 port = 59591
-pass = 
+pass = adminCine
 host = mongodb://
 cluster = roundhouse.proxy.rlwy.net
-dbName = BetPlay
+dbName = CineCampus
+
+user = usuario1
+port = 59591
+pass = usuario1
+host = mongodb://
+cluster = roundhouse.proxy.rlwy.net
+dbName = CineCampus
+
+user = usuarioVIP1
+port = 59591
+pass = usuarioVIP1
+host = mongodb://
+cluster = roundhouse.proxy.rlwy.net
+dbName = CineCampus

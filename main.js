@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 
 let check = new peliculas()
 //Caso de Uso 1
-// console.log(await check.getAllMovies());
+//console.log(await check.getAllMovies());
 //Caso de Uso 2
 // let idPelicula = new ObjectId('66a55f092de7f97b635de2c8')
 // console.log(await check.getOneMovie(idPelicula));
