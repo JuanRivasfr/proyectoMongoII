@@ -26,5 +26,12 @@ let check = new boletas()
 // }
 // console.log(await check.reservarAsientos(objReservaBoletos))
 //Caso de Uso 6
-const idBoleto = new ObjectId("66a67d06e73d622e5f052331")
-console.log(await check.validarReserva(idBoleto))
+// const idBoleto = new ObjectId("66a67d06e73d622e5f052331")
+// console.log(await check.validarReserva(idBoleto))
+//Caso de uso 7
+const objDescuento = {
+    sucess : "Se reservaron los boletos de forma exitosa",
+    precioTotal :   19.5,
+    usuarioId : new ObjectId("66a55b542de7f97b635de2c4")
+    } 
+    console.log(await check.aplicarDescuento(objDescuento)) 

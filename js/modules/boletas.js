@@ -191,7 +191,8 @@ export class boletas extends connect {
         if(res.acknowledged === true){
           if(tipo_compra === "compra"){
             return{sucess : "Se compraron los boletos de forma exitosa",
-              precioTotal : precioTotal
+              precioTotal : precioTotal,
+              usuarioId : usuarioId
             }
           }
           if(tipo_compra === "reserva"){
@@ -330,5 +331,65 @@ export class boletas extends connect {
         return {sucess: "La reserva se ha eliminado de forma correcta"}
       }
       
+    }
+
+    async aplicarDescuento(objeto){
+      let {sucess, precioTotal, usuarioId} = objeto
+
+      let res = await this.db.collection("usuarios").aggregate(
+        [
+          {
+            $match: {
+              _id: new ObjectId('66a55b542de7f97b635de2c4')
+            }
+          },
+          {
+            $project: {
+              "categoria": "$categoria.nombre",
+              "descuento": "$categoria.descuento",
+              _id: 0,
+              "estadoTarjeta": {
+                $ifNull: [
+                  { $arrayElemAt: ["$tarjeta.estado", 0] },
+                  []
+                ]
+              }
+            }
+          },
+          {
+            $unwind: {
+              path: "$estadoTarjeta",
+              preserveNullAndEmptyArrays: true
+            }
+          }
+        ]
+        
+      ).toArray()
+
+      let {categoria, descuento, estadoTarjeta} = res[0]
+      if(categoria === "VIP"){
+        if(estadoTarjeta === "activa"){
+          console.log(precioTotal);
+          let descuentoAplicado = (precioTotal * (descuento/100))
+          precioTotal = precioTotal - descuentoAplicado
+          return{
+            sucess: "Descuento aplicado con exito",
+            precioTotal: precioTotal,
+            descuentoAplicado: descuentoAplicado
+          }
+        }
+        else if (estadoTarjeta === undefined) {
+          return{error : "El usuario no cuenta con tarjeta"}
+        } 
+        else {
+          {
+            return {error: "La tarjeta no esta activa actualmente"}
+          }
+        }
+      }
+      else{
+        return{error: "El usuario no es VIP"}
+      }
+
     }
 }
