@@ -51,5 +51,11 @@ let check = new usuarios()
 // }
 // console.log(await check.validacionUsuario(objUsuario)) 
 //Caso de uso 10
-let idUsuario = new ObjectId("66a55b542de7f97b635de2c3")
-console.log(await check.consultarUsuario(idUsuario))
+// let idUsuario = new ObjectId("66a55b542de7f97b635de2c3")
+// console.log(await check.consultarUsuario(idUsuario))
+//Caso de uso 11
+let objActualizar = {
+    idUsuario : new ObjectId("66a55b542de7f97b635de2c3"),
+    nuevoRol : "estandar"
+}
+console.log(await check.cambiarRolUsuario(objActualizar));

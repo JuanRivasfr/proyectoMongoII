@@ -1,4 +1,5 @@
 import { connect } from "../../helpers/db/connect.js";
+import { ObjectId } from "mongodb";
 
 export class usuarios extends connect {
     static instance
@@ -72,4 +73,30 @@ export class usuarios extends connect {
         return res
     }
 
+    async cambiarRolUsuario(obj){
+        let {idUsuario, nuevoRol} = obj
+
+        const usuarioExiste = await this.collection.findOne({_id : new ObjectId(idUsuario)})
+        if(!usuarioExiste){
+            return { error : "El usuario no existe"}
+        }
+
+        if(nuevoRol !== "VIP" && nuevoRol !== "estandar"){
+            return {error: "El nuevo rol debe ser VIP o estandar"}
+        }
+            
+        if(usuarioExiste.categoria.nombre === nuevoRol){
+            return{error: "El usuario ya cuenta con ese rol"}
+        }
+
+        const actualizarUsuario = await this.collection.updateOne(
+            { _id: idUsuario },
+            { $set: { 'categoria.nombre': nuevoRol }}
+        );
+
+        if(actualizarUsuario.acknowledged === true){
+            return{sucess: "Cambio realizado con exito"}
+        }
+
+    }
 }
