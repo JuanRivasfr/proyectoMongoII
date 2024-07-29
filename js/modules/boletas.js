@@ -192,7 +192,9 @@ export class boletas extends connect {
           if(tipo_compra === "compra"){
             return{sucess : "Se compraron los boletos de forma exitosa",
               precioTotal : precioTotal,
-              usuarioId : usuarioId
+              idUsuario : usuarioId,
+              funcionId : funcionId,
+              asientos : asientos
             }
           }
           if(tipo_compra === "reserva"){
@@ -334,13 +336,14 @@ export class boletas extends connect {
     }
 
     async aplicarDescuento(objeto){
-      let {sucess, precioTotal, usuarioId} = objeto
-
+      
+      let {sucess, precioTotal, usuarioId} = objeto;
+      
       let res = await this.db.collection("usuarios").aggregate(
         [
           {
             $match: {
-              _id: new ObjectId('66a55b542de7f97b635de2c4')
+              _id: usuarioId
             }
           },
           {
@@ -359,37 +362,67 @@ export class boletas extends connect {
           {
             $unwind: {
               path: "$estadoTarjeta",
-              preserveNullAndEmptyArrays: true
+              preserveNullAndEmptyArrays: true 
             }
           }
         ]
-        
-      ).toArray()
-
-      let {categoria, descuento, estadoTarjeta} = res[0]
-      if(categoria === "VIP"){
-        if(estadoTarjeta === "activa"){
-          console.log(precioTotal);
-          let descuentoAplicado = (precioTotal * (descuento/100))
-          precioTotal = precioTotal - descuentoAplicado
-          return{
+      ).toArray();
+    
+      if (res.length === 0) {
+        return { error: "Usuario no encontrado" };
+      }
+    
+      let { categoria, descuento, estadoTarjeta } = res[0];
+      if (categoria === "VIP") {
+        if (estadoTarjeta === "activa") {
+          let descuentoAplicado = (precioTotal * (descuento / 100));
+          precioTotal = precioTotal - descuentoAplicado;
+          return {
             sucess: "Descuento aplicado con exito",
             precioTotal: precioTotal,
             descuentoAplicado: descuentoAplicado
+          };
+        } else if (estadoTarjeta === undefined) {
+          return { error: "El usuario no cuenta con tarjeta" };
+        } else {
+          return { error: "La tarjeta no esta activa actualmente" };
+        }
+      } else {
+        return { error: "El usuario no es VIP" };
+      }
+    }
+
+    async compraEnLinea(obj){
+      let res = await this.comprarBoletos(obj)
+      if(res.sucess){ 
+        let {sucess, precioTotal, idUsuario : usuarioId, funcionId, asientos} = res
+        const objDescuento = {
+          sucess : sucess,
+          precioTotal: precioTotal,
+          usuarioId: usuarioId
+        }
+        let resDescuento = await this.aplicarDescuento(objDescuento)   
+        if(resDescuento.sucess){
+          return{
+            sucess : "Boletos comprados con exito",
+            funcion: funcionId,
+            asientos: asientos,
+            precioTotal: resDescuento.precioTotal,
+            descuentoAplicado: resDescuento.descuentoAplicado
           }
         }
-        else if (estadoTarjeta === undefined) {
-          return{error : "El usuario no cuenta con tarjeta"}
-        } 
-        else {
-          {
-            return {error: "La tarjeta no esta activa actualmente"}
+        if(!resDescuento.sucess){
+          return{ 
+            sucess : "Boletos comprados con exito", 
+            funcion: funcionId,
+            asientos: asientos,
+            precioTotal: precioTotal
           }
         }
       }
       else{
-        return{error: "El usuario no es VIP"}
+        return res
       }
-
+      
     }
 }

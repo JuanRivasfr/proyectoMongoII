@@ -5,7 +5,7 @@ import { peliculas } from "./js/modules/peliculas.js";
 import { salas } from "./js/modules/salas.js";
 import { ObjectId } from "mongodb";
 
-let check = new usuarios()
+let check = new boletas()
 //Caso de Uso 3
 // const objCompraBoletos = {
 //     idPelicula : new ObjectId("66a55f092de7f97b635de2c8"),
@@ -29,12 +29,12 @@ let check = new usuarios()
 // const idBoleto = new ObjectId("66a67d06e73d622e5f052331")
 // console.log(await check.validarReserva(idBoleto))
 //Caso de uso 7 y 8
-// const objDescuento = {
-//     sucess : "Se reservaron los boletos de forma exitosa",
-//     precioTotal :   19.5,
-//     usuarioId : new ObjectId("66a55b542de7f97b635de2c4")
-//     } 
-//     console.log(await check.aplicarDescuento(objDescuento)) 
+//   const objDescuento = {
+//       sucess : "Se reservaron los boletos de forma exitosa",
+//       precioTotal :   19.5,
+//       usuarioId : new ObjectId("66a55b542de7f97b635de2c6")
+//       } 
+//       console.log(await check.aplicarDescuento(objDescuento)) 
 //Caso de uso 9
 // const objUsuario ={
 //     identificacion: 124567,
@@ -60,5 +60,14 @@ let check = new usuarios()
 // }
 // console.log(await check.cambiarRolUsuario(objActualizar));
 //Caso de uso 12
-let buscarUsuarios = "VIP"
-console.log(await check.consultarUsuariosPorRol(buscarUsuarios));
+// let buscarUsuarios = "VIP"
+// console.log(await check.consultarUsuariosPorRol(buscarUsuarios));
+//Caso de uso 13 y 14
+  const objCompraBoletos = {
+           idPelicula : new ObjectId("66a55f092de7f97b635de2c8"),
+           fechaFuncion : new Date("2024-08-16"),
+           horaInicio: "14:00",
+           asientos: ["D3"], 
+           idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
+       }
+  console.log(await check.compraEnLinea(objCompraBoletos))
