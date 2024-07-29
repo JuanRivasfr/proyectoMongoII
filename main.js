@@ -5,7 +5,12 @@ import { peliculas } from "./js/modules/peliculas.js";
 import { salas } from "./js/modules/salas.js";
 import { ObjectId } from "mongodb";
 
-let check = new boletas()
+let check = new peliculas()
+//Caso de Uso 1
+// console.log(await check.getAllMovies());
+//Caso de Uso 2
+// let idPelicula = new ObjectId('66a55f092de7f97b635de2c8')
+// console.log(await check.getOneMovie(idPelicula));
 //Caso de Uso 3
 // const objCompraBoletos = {
 //     idPelicula : new ObjectId("66a55f092de7f97b635de2c8"),
@@ -63,11 +68,11 @@ let check = new boletas()
 // let buscarUsuarios = "VIP"
 // console.log(await check.consultarUsuariosPorRol(buscarUsuarios));
 //Caso de uso 13 y 14
-  const objCompraBoletos = {
-           idPelicula : new ObjectId("66a55f092de7f97b635de2c8"),
-           fechaFuncion : new Date("2024-08-16"),
-           horaInicio: "14:00",
-           asientos: ["D3"], 
-           idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
-       }
-  console.log(await check.compraEnLinea(objCompraBoletos))
+//   const objCompraBoletos = {
+//            idPelicula : new ObjectId("66a55f092de7f97b635de2c8"),
+//            fechaFuncion : new Date("2024-08-16"),
+//            horaInicio: "14:00",
+//            asientos: ["D3"], 
+//            idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
+//        }
+//   console.log(await check.compraEnLinea(objCompraBoletos))

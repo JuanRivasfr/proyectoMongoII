@@ -2,8 +2,17 @@ import { connect } from "../../helpers/db/connect.js";
 import { ObjectId } from "mongodb";
 import { salas } from "./salas.js";
 
+/**
+ * Clase que representa las operaciones relacionadas con boletas.
+ * @extends connect
+ */
 export class boletas extends connect {
     static instance
+    /**
+     * Crea una instancia de boletas.
+     * Si ya existe una instancia, retorna esa instancia.
+     * Configura la conexión a la base de datos y la colección "boletas".
+     */
     constructor() {
         if (typeof boletas.instance === "object"){
             return boletas.instance
@@ -15,10 +24,30 @@ export class boletas extends connect {
         return this;
     }
 
+    /**
+   * Obtiene todas las boletas de la colección.
+   * 
+   * @async
+   * @returns {Promise<Array>} Una promesa que resuelve a un array de todas las boletas.
+   */
+
     async getAllMatch() {
         let activities  = await this.collection.find({}).toArray()
         return activities
     }
+
+    /**
+   * Compra boletos para una función de película.
+   * 
+   * @async
+   * @param {Object} obj - El objeto que contiene los detalles de la compra.
+   * @param {string} obj.idPelicula - El ID de la película.
+   * @param {Date} obj.fechaFuncion - La fecha de la función.
+   * @param {string} obj.horaInicio - La hora de inicio de la función.
+   * @param {Array<string>} obj.asientos - Los asientos seleccionados.
+   * @param {string} obj.idUsuario - El ID del usuario.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la compra o un mensaje de error.
+   */
 
     async comprarBoletos(obj){
         
@@ -207,6 +236,18 @@ export class boletas extends connect {
         
     }
 
+    /**
+   * Agrega boletos para una función de película.
+   * 
+   * @async
+   * @param {Array<string>} asientos - Los asientos seleccionados.
+   * @param {string} funcionId - El ID de la función.
+   * @param {string} usuarioId - El ID del usuario.
+   * @param {string} tipo_compra - El tipo de compra (compra o reserva).
+   * @param {number} precioSala - El precio de la sala.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la operación y los detalles de la compra/reserva.
+   */
+
     async reservarAsientos(obj){
       let {idFuncion, asientos, idUsuario} = obj
 
@@ -308,6 +349,14 @@ export class boletas extends connect {
 
     }
 
+    /**
+   * Valida una reserva de boleto.
+   * 
+   * @async
+   * @param {string} idBoleto - El ID del boleto.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la operación o un error si la validación falla.
+   */
+
     async validarReserva(idBoleto){
       const boletoExiste = await this.collection.findOne({_id : new ObjectId(idBoleto)})
         if(!boletoExiste){
@@ -324,6 +373,14 @@ export class boletas extends connect {
       return this.eliminarReserva(idBoleto)
     }
 
+    /**
+   * Elimina una reserva de boleto.
+   * 
+   * @async
+   * @param {string} idBoleto - El ID del boleto a eliminar.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la operación o un error si la eliminación falla.
+   */
+
     async eliminarReserva(idBoleto){
       let res = await this.collection.deleteOne({
         _id : idBoleto
@@ -334,6 +391,17 @@ export class boletas extends connect {
       }
       
     }
+
+    /**
+   * Aplica un descuento al precio total de una compra si el usuario es VIP y tiene una tarjeta activa.
+   * 
+   * @async
+   * @param {Object} objeto - Objeto que contiene los datos de la compra.
+   * @param {string} objeto.sucess - Estado de la compra.
+   * @param {number} objeto.precioTotal - Precio total de la compra antes del descuento.
+   * @param {string} objeto.usuarioId - ID del usuario que realiza la compra.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la operación o un error si el descuento no puede aplicarse.
+   */
 
     async aplicarDescuento(objeto){
       
@@ -391,6 +459,19 @@ export class boletas extends connect {
         return { error: "El usuario no es VIP" };
       }
     }
+
+    /**
+   * Procesa una compra en línea, incluyendo la aplicación de descuentos si es aplicable.
+   * 
+   * @async
+   * @param {Object} obj - Objeto que contiene la información de la compra.
+   * @param {string} obj.idPelicula - ID de la película para la que se compran los boletos.
+   * @param {Date} obj.fechaFuncion - Fecha de la función de la película.
+   * @param {string} obj.horaInicio - Hora de inicio de la función.
+   * @param {Array<string>} obj.asientos - Lista de asientos que se quieren comprar.
+   * @param {string} obj.idUsuario - ID del usuario que realiza la compra.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la compra, incluyendo detalles sobre el descuento aplicado, si corresponde.
+   */
 
     async compraEnLinea(obj){
       let res = await this.comprarBoletos(obj)

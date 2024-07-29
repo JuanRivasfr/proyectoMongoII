@@ -14,10 +14,26 @@ export class funciones extends connect {
         return this;
     }
 
+    /**
+   * Recupera todos los documentos de la colección.
+   * 
+   * @async
+   * @returns {Promise<Array<Object>>} Una promesa que resuelve a un array de objetos que representan todos los documentos en la colección.
+   */
+
     async getAllMatch() {
         let activities  = await this.collection.find({}).toArray()
         return activities
     }
+
+    /**
+   * Verifica la disponibilidad de asientos para una función específica.
+   * 
+   * @async
+   * @param {string} idFuncion - ID de la función para la que se verifica la disponibilidad de asientos.
+   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que indica si hay asientos disponibles y proporciona una lista de asientos disponibles, si corresponde.
+   * @returns {Object} - En caso de éxito, el objeto contiene una propiedad `success` con un mensaje y una lista de `asientosDisponibles`. En caso de error, el objeto contiene una propiedad `error` con un mensaje de error.
+   */
 
     async disponibilidadAsientos(idFuncion){
 

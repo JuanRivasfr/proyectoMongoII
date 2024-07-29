@@ -14,12 +14,26 @@ export class peliculas extends connect {
         return this;
     }
 
+    /**
+     * Obtiene todos los documentos de la colección.
+     * 
+     * @async
+     * @returns {Promise<Array<Object>>} Una promesa que resuelve a un array de objetos que representan todos los documentos en la colección.
+     */
+
+
     async getAllMatch() {
         let activities  = await this.collection.find({}).toArray()
         return activities
     }
 
-    //Caso de uso #1
+    /**
+     * Obtiene todas las películas que tienen funciones futuras programadas.
+     * 
+     * @async
+     * @returns {Promise<string>} Una promesa que resuelve a una cadena JSON que representa las películas con funciones futuras, excluyendo ciertos campos específicos.
+     */
+
     async getAllMovies(){
         let res = await this.collection.aggregate([
             {
@@ -59,8 +73,15 @@ export class peliculas extends connect {
         return(JSON.stringify(res, null, 2))    
     }
 
+    /**
+     * Obtiene los detalles de una película específica por su ID.
+     * 
+     * @async
+     * @param {string} idPelicula - El ID de la película que se desea obtener.
+     * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene los detalles de la película solicitada, excluyendo ciertos campos específicos.
+     */
 
-    //Caso de uso #2
+
     async getOneMovie(idPelicula){
 
         const peliculaExiste = await this.collection.findOne({_id : new ObjectId(idPelicula)})
