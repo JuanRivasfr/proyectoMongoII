@@ -25,28 +25,31 @@ let check = new usuarios()
 //     idUsuario: new ObjectId("66a55b542de7f97b635de2c4")
 // }
 // console.log(await check.reservarAsientos(objReservaBoletos))
-//Caso de Uso 6
+//Caso de Uso 6 
 // const idBoleto = new ObjectId("66a67d06e73d622e5f052331")
 // console.log(await check.validarReserva(idBoleto))
-//Caso de uso 7
+//Caso de uso 7 y 8
 // const objDescuento = {
 //     sucess : "Se reservaron los boletos de forma exitosa",
 //     precioTotal :   19.5,
 //     usuarioId : new ObjectId("66a55b542de7f97b635de2c4")
 //     } 
 //     console.log(await check.aplicarDescuento(objDescuento)) 
-//Caso de uso 8
-const objUsuario ={
-    identificacion: 124567,
-    nombre: "Juan",
-    apellido: "Rivas",
-    nick: "rivoo",
-    email: "sebasriurr@gmail.com",
-    telefono: ["4561564789"],
-    categoria: {
-        nombre: "estandar",
-        descuento: 0
-    },
-    tarjeta: []
-}
-console.log(await check.validacionUsuario(objUsuario)) 
+//Caso de uso 9
+// const objUsuario ={
+//     identificacion: 124567,
+//     nombre: "Juan",
+//     apellido: "Rivas",
+//     nick: "rivoo",
+//     email: "sebasriurr@gmail.com",
+//     telefono: ["4561564789"],
+//     categoria: {
+//         nombre: "estandar",
+//         descuento: 0
+//     },
+//     tarjeta: []
+// }
+// console.log(await check.validacionUsuario(objUsuario)) 
+//Caso de uso 10
+let idUsuario = new ObjectId("66a55b542de7f97b635de2c3")
+console.log(await check.consultarUsuario(idUsuario))

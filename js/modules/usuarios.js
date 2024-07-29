@@ -66,14 +66,10 @@ export class usuarios extends connect {
         }
     }
 
-    async crearUsuario(){
-        let res = await this.collection.command({
-            user: "user1",
-            pwd: "password1",
-            roles: [
-              { role: "readWriteRole", db: "myDatabase" }
-            ]
-          })
+    async consultarUsuario(idUsuario){
+
+        let res = await this.collection.findOne({_id : idUsuario})
+        return res
     }
 
 }
