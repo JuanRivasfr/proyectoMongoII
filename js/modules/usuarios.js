@@ -99,4 +99,29 @@ export class usuarios extends connect {
         }
 
     }
+
+    async consultarUsuariosPorRol(rol){
+
+        if(rol === null){
+            let resTodos = await this.collection.find({}).toArray()
+            return resTodos
+        }
+
+        if(rol !== "VIP" && rol !== "estandar" && rol !== "administrador"){
+            return {error : "El rol a consultar debe ser VIP, estandar, administrador o null"}
+        }
+
+        let res = await this.collection.aggregate(
+            [
+                {
+                  $match: {
+                    "categoria.nombre" : rol
+                  }
+                }
+              ]
+        ).toArray()
+
+        console.log(res);
+        
+    }
 }
