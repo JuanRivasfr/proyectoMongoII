@@ -5,7 +5,7 @@ import { peliculas } from "./js/modules/peliculas.js";
 import { salas } from "./js/modules/salas.js";
 import { ObjectId } from "mongodb";
 
-let check = new peliculas()
+let check = new usuarios()
 //Caso de Uso 1
 //console.log(await check.getAllMovies());
 //Caso de Uso 2
@@ -41,20 +41,20 @@ let check = new peliculas()
 //       } 
 //       console.log(await check.aplicarDescuento(objDescuento)) 
 //Caso de uso 9
-// const objUsuario ={
-//     identificacion: 124567,
-//     nombre: "Juan",
-//     apellido: "Rivas",
-//     nick: "rivoo",
-//     email: "sebasriurr@gmail.com",
-//     telefono: ["4561564789"],
-//     categoria: {
-//         nombre: "estandar",
-//         descuento: 0
-//     },
-//     tarjeta: []
-// }
-// console.log(await check.validacionUsuario(objUsuario)) 
+const objUsuario ={
+    identificacion: 124567,
+    nombre: "Juan",
+    apellido: "Rivas",
+    nick: "rivoo",
+    email: "sebasriurr@gmail.com",
+    telefono: ["4561564789"],
+    categoria: {
+        nombre: "estandar",
+        descuento: 0
+    },
+    tarjeta: []
+}
+console.log(await check.validacionUsuario(objUsuario)) 
 //Caso de uso 10
 // let idUsuario = new ObjectId("66a55b542de7f97b635de2c3")
 // console.log(await check.consultarUsuario(idUsuario))

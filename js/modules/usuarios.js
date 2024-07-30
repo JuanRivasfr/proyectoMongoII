@@ -45,7 +45,6 @@ export class usuarios extends connect {
     async validacionUsuario(obj){
         
         let {identificacion, nombre, apellido, nick, email, telefono, categoria, tarjeta} = obj
-        
         let res  = await this.collection.find({}).toArray()
         for (let i = 0; i < res.length; i++) {
             if(res[i].identificacion === identificacion){
@@ -94,14 +93,15 @@ export class usuarios extends connect {
             nombre: nombre,
             apellido: apellido,
             nick: nick,
-            email: email,
+            email: email,  
             telefono: telefono,
             categoria: categoria,
             tarjeta: tarjeta
         })
 
         if(res.acknowledged === true){
-            return{sucess: "Usuario creado con exito"}
+            console.log({sucess: "Usuario creado con exito"})
+            return(this.crearUsuarioMongo(nick, identificacion, categoria.nombre))
         }
     }
 
@@ -191,4 +191,38 @@ export class usuarios extends connect {
         return res
         
     }
+
+    /**
+     * Crea un nuevo usuario en MongoDB con el rol correspondiente según la categoría.
+     * 
+     * @async
+     * @param {string} nick - El nombre de usuario.
+     * @param {string} pwd - La contraseña del usuario.
+     * @param {string} categoria - La categoría del usuario, puede ser "VIP" o "estandar".
+     * @returns {Promise<Object>} Una promesa que resuelve a un objeto con el nombre de usuario y la contraseña.
+     */
+
+    async crearUsuarioMongo(nick, pwd, categoria){
+
+        let rol = ""
+        if(categoria === "VIP"){
+            rol = "usuarioVIP"
+        }
+        if(categoria === "estandar"){ 
+            rol = "usuario"
+        }
+
+        pwd = pwd.toString()
+
+        const newUser = await this.db.command({
+            createUser: nick,
+            pwd: pwd, 
+            roles: [
+                { role: rol, db: this.getDbName}
+            ]
+        })
+
+        return {nick: nick,
+                pwd: pwd}
+    }  
 }
