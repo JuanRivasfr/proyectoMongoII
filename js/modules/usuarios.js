@@ -209,7 +209,10 @@ export class usuarios extends connect {
             rol = "usuarioVIP"
         }
         if(categoria === "estandar"){ 
-            rol = "usuario"
+            rol = "usuarioEstandar" 
+        }
+        if(categoria === "administrador"){
+            rol = "adminCine"
         }
 
         pwd = pwd.toString()
