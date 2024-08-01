@@ -231,3 +231,7 @@ Los puntos a evaluar serán los siguientes:
 - **25 puntos**: Se creó el repositorio, pero en su rama principal no se encuentra el proyecto general ,al igual que algún archivo en relación al proyecto.
 - **100 puntos**: Se creó exitosamente el repositorio, donde en su rama principal se encuentra el proyecto general y sus archivos en relación a ello, con evidencia de la participación del equipo completo de manera periódica.
 
+### Cadena de conexion
+```javascript
+   mongodb://mongo:xpDKAskyxeDoKqcrgYltYqSQIefmnCQB@roundhouse.proxy.rlwy.net:59591
+```
