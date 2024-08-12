@@ -1,12 +1,13 @@
-import { connect } from "../../helpers/db/connect.js";
-import { ObjectId } from "mongodb";
-import { salas } from "./salas.js";
+const connect = require("../../helpers/db/connect")
+const {ObjectId} = require("mongodb")
+const salas = require("./salas.js")
+
 
 /**
  * Clase que representa las operaciones relacionadas con boletas.
  * @extends connect
  */
-export class boletas extends connect {
+class boletas extends connect {
     static instance
     /**
      * Crea una instancia de boletas.
@@ -507,3 +508,4 @@ export class boletas extends connect {
       
     }
 }
+module.exports = boletas

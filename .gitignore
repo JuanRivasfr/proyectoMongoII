@@ -1,2 +1,7 @@
 package-lock.json
 node_modules
+
+const Boletas = require("./js/modules/boletas.js")
+const Funcion = require("./js/modules/funciones.js")
+
+const Salas = require ("./js/modules/salas.js")

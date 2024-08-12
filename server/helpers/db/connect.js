@@ -1,6 +1,6 @@
-import { MongoClient } from "mongodb";
+const {MongoClient} = require("mongodb");
 
-export class connect {
+module.exports = class Connect {
     static instance;
     user;
     port;
@@ -9,8 +9,8 @@ export class connect {
     #cluster;
     #dbName
     constructor() {
-        if(typeof connect.instance === 'object'){
-            return connect.instance;
+        if(typeof Connect.instance === 'object'){
+            return Connect.instance;
         }
         this.user = process.env.user
         this.port = process.env.port
@@ -20,7 +20,7 @@ export class connect {
         this.setDbName = process.env.dbName
         this.#open();
         this.db = this.conexion.db(this.getDbName);
-        connect.instance = this;
+        Connect.instance = this;
         return this
     }
     set setPass(pass) {

@@ -2,6 +2,7 @@
 
 ------
 
+
 **Tiempo de ejecución**: 4 Dias
 
 **Nivel de dificultad:** ★★★★☆
@@ -95,21 +96,23 @@ Desarrollar una serie de APIs para la aplicación web de CineCampus utilizando M
    - **API para Crear Usuario:** Permitir la creación de nuevos usuarios en el sistema, asignando roles y privilegios específicos (usuario estándar, usuario VIP o administrador).
 
    ```javascript
-   let check = new usuarios()
    const objUsuario ={
-      identificacion: 124567,
-      nombre: "Juan",
-      apellido: "Rivas",
-      nick: "rivoo",
-      email: "sebasriurr@gmail.com",
-      telefono: ["4561564789"],
-      categoria: {
-         nombre: "estandar",
-         descuento: 0
-      },
-      tarjeta: []
+   identificacion: 45612,
+   nombre: "Juan",
+   apellido: "Rivas",
+   nick: "riv356l",
+   email: "sebasriurr@gmail.com",
+   telefono: ["4561564745"],
+   categoria: {
+      nombre: "administrador",   
+      descuento: 0
+   },
+   tarjeta: []
    }
-   console.log(await check.validacionUsuario(objUsuario)) 
+   const Instance = new Usuarios();
+   Instance.validacionUsuario(objUsuario).then(res => {
+      console.log(res);
+   })
    ```
 
    - **API para Obtener Detalles de Usuario:** Permitir la consulta de información detallada sobre un usuario, incluyendo su rol y estado de tarjeta VIP.

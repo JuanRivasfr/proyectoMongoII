@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "📕 **Título: CineCampus**",
   "main": "main.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "dev": "node --watch --env-file=.env main.js"
+    "dev": "node --watch --env-file=.env server/main.js"
   },
   "author": "",
   "license": "ISC",

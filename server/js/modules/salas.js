@@ -1,6 +1,6 @@
-import { connect } from "../../helpers/db/connect.js";
+const connect = require("../../helpers/db/connect.js")
 
-export class salas extends connect {
+class salas extends connect {
     static instance
     constructor() {
         if (typeof salas.instance === "object"){
@@ -18,3 +18,5 @@ export class salas extends connect {
         return activities
     }
 }
+
+module.exports = salas
