@@ -1,6 +1,5 @@
 const connect = require("../../helpers/db/connect")
 const {ObjectId} = require("mongodb")
-const salas = require("./salas.js")
 
 
 /**

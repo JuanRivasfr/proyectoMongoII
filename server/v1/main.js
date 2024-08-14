@@ -8,3 +8,4 @@ const Instance = new Peliculas
 Instance.getAllMovies().then(res => {
    console.log(res);
 })
+
