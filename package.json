@@ -15,5 +15,11 @@
     "express": "^4.19.2",
     "express-validator": "^7.2.0",
     "mongodb": "^6.8.0"
+  },
+  "devDependencies": {
+    "standard": "^17.1.0"
+  },
+  "eslintConfig": {
+    "extends": "standard"
   }
 }

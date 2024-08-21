@@ -1,7 +1,7 @@
-const connect = require("../../helpers/db/connect")
+const connect = require("../helpers/db/connect")
 const {ObjectId} = require ("mongodb")
 
-class peliculas extends connect {
+module.exports = class peliculas extends connect {
     static instance
     constructor() {
         if (typeof peliculas.instance === "object"){
@@ -38,39 +38,37 @@ class peliculas extends connect {
         let res = await this.collection.aggregate([
             {
                 $lookup: {
-                from: "funciones",
-                localField: "_id",
-                foreignField: "pelicula_id",
-                as: "funciones"
+                    from: "funciones",          
+                    localField: "_id",          
+                    foreignField: "pelicula_id",
+                    as: "funciones"             
                 }
+            },
+            {
+                        $unwind: "$funciones"    
             },
             {
                 $match: {
-                funciones: { $ne: [] }
+                    funciones: { $ne: [] }    
                 }
             },
             {
-                $addFields: {
-                funciones: {
-                    $filter: {
-                    input: "$funciones",
-                    as: "funcion",
-                    cond: { $gte: ["$$funcion.fecha", new Date()] }
-                    }
-                }
+                $group: {
+                    _id: "$_id",                
+                    titulo: { $first: "$titulo" }, 
+                    genero: { $first: "$genero" }, 
+                    duracion: { $first: "$duracion" }, 
+                    sinopsis: { $first: "$sinopsis" }, 
+                    funciones: { $push: "$funciones" } 
                 }
             },
             {
-                $project: {
-                _id: 0,
-                sinopsis: 0,
-                "funciones._id": 0,
-                "funciones.pelicula_id": 0,
-                "funciones.sala_id" : 0
-                }
+            $project: {
+                "funciones._id" : 0
+            }
             }
         ]).toArray()
-        return(JSON.stringify(res, null, 2))    
+        return(res)    
     }
 
     /**
@@ -107,4 +105,3 @@ class peliculas extends connect {
     }
 }
 
-module.exports = peliculas

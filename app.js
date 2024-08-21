@@ -1,4 +1,5 @@
 const express = require("express");
+const router = require("./server/router");
 const app = express();
 const path = require("path");
 require("dotenv").config()
@@ -15,6 +16,11 @@ app.get("/", (req, res) =>{
 app.get("/servicio", (req, res) =>{
     res.sendFile(`${process.env.EXPRESS_STATIC}/views/servicio.html`, {root: __dirname})
 })
+
+app.use((req, res, next) => {
+    req.__dirname = __dirname;
+    next();
+}, router);
 
 app.use((req, res) => {
     res.status(404).json({message: "No tiene autorizacion"})

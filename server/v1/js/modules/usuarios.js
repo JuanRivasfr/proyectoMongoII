@@ -1,7 +1,7 @@
-const Connect = require("../../helpers/db/connect")
+const Connect = require("../../../helpers/db/connect")
 const {ObjectId} = require ("mongodb")
 
-class Usuarios extends Connect {
+module.exports = class Usuarios extends Connect {
     static instance
     constructor() {
         if (typeof Usuarios.instance === "object"){
@@ -179,13 +179,13 @@ class Usuarios extends Connect {
         }
 
         let res = await this.collection.aggregate(
-            [
-                {
-                  $match: {
-                    "categoria.nombre" : rol
-                  }
+        [
+            {
+                $match: {
+                "categoria.nombre" : rol
                 }
-              ]
+            }
+            ]
         ).toArray()
 
         return res
@@ -229,5 +229,3 @@ class Usuarios extends Connect {
                 pwd: pwd}
     }  
 }
-
-module.exports = Usuarios

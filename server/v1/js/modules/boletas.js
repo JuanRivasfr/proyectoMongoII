@@ -1,12 +1,7 @@
-const connect = require("../../helpers/db/connect")
+const connect = require("../../../helpers/db/connect")
 const {ObjectId} = require("mongodb")
 
-
-/**
- * Clase que representa las operaciones relacionadas con boletas.
- * @extends connect
- */
-class boletas extends connect {
+module.exports = class boletas extends connect {
     static instance
     /**
      * Crea una instancia de boletas.
@@ -507,4 +502,3 @@ class boletas extends connect {
       
     }
 }
-module.exports = boletas
