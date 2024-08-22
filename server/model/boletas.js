@@ -1,4 +1,4 @@
-const connect = require("../../../helpers/db/connect")
+const connect = require("../helpers/db/connect")
 const {ObjectId} = require("mongodb")
 
 module.exports = class boletas extends connect {
@@ -43,6 +43,8 @@ module.exports = class boletas extends connect {
    * @param {string} obj.idUsuario - El ID del usuario.
    * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la compra o un mensaje de error.
    */
+
+
 
     async comprarBoletos(obj){
         
