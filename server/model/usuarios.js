@@ -1,4 +1,4 @@
-const Connect = require("../../../helpers/db/connect")
+const Connect = require("../helpers/db/connect")
 const {ObjectId} = require ("mongodb")
 
 module.exports = class Usuarios extends Connect {
@@ -24,6 +24,19 @@ module.exports = class Usuarios extends Connect {
     async getAllMatch() {
         let activities  = await this.collection.find({}).toArray()
         return activities
+    }
+
+    async buscarUnUsuario(idUsuario){
+
+        let res = await this.collection.aggregate([
+            {
+                $match: {
+                  _id : new ObjectId('66a55b542de7f97b635de2c3')
+                }
+            }
+        ]).toArray()
+        return res
+
     }
 
     /**

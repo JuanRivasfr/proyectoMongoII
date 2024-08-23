@@ -50,17 +50,6 @@ module.exports = class boletas extends connect {
         
         let {idPelicula, fechaFuncion, horaInicio, asientos, idUsuario} = obj
 
-        //Validar si existe la pelicula
-        const peliculaExiste = await this.db.collection("peliculas").findOne({_id : new ObjectId(idPelicula)})
-        if(!peliculaExiste){
-            return { error : "La pelicula no existe"}
-        }
-
-        //Validar si existe el usuario
-        const usuarioExiste = await this.db.collection("usuarios").findOne({_id : new ObjectId(idUsuario)})
-        if(!usuarioExiste){
-            return { error : "El usuario no existe"}
-        }
         
         //Validar que la fecha sea actual o futura
         if(fechaFuncion.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)){

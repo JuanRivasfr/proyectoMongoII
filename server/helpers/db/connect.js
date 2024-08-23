@@ -9,9 +9,6 @@ module.exports = class Connect {
     #cluster;
     #dbName
     constructor() {
-        if(typeof Connect.instance === 'object'){
-            return Connect.instance;
-        }
         this.user = process.env.user
         this.port = process.env.port
         this.setPass = process.env.pass
@@ -20,8 +17,6 @@ module.exports = class Connect {
         this.setDbName = process.env.dbName
         this.#open();
         this.db = this.conexion.db(this.getDbName);
-        Connect.instance = this;
-        return this
     }
     set setPass(pass) {
         this.#pass = pass;

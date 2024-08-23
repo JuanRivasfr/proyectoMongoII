@@ -9,7 +9,7 @@ module.exports = class peliculasDto{
     templatesErrorPeliculas(){
         return {
             status: 404,
-            message: "No existe la/s pelicula/s"
+            message: "No se encontro la/s pelicula/s"
         }
     }
 

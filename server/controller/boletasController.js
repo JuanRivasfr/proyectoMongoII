@@ -1,20 +1,32 @@
 const {validationResult} = require("express-validator");
+const peliculas = require("../model/peliculas")
 const boletas = require("../model/boletas");
+const usuarios = require("../model/usuarios")
 const boletasDto = require("../dto/boletasDto");
+const peliculasDto = require("../dto/peliculasDto")
 const { ObjectId } = require('mongodb');
 
 const comprarUnBoleto = async(req, res) => {
+    const BoletasDto = new boletasDto()
+    const PeliculasDto = new peliculasDto()
+    const objPeliculas = new peliculas()
+    const objBoletas = new boletas()
+    const objUsuarios = new usuarios()
     const errors = validationResult(req);
     if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
-    const BoletasDto = new boletasDto()
-    const obj = new boletas()
     req.body.idPelicula = new ObjectId(req.body.idPelicula)
     req.body.fechaFuncion = new Date(req.body.fechaFuncion)
     req.body.idUsuario = new ObjectId(req.body.idUsuario)
-    let resModel = await obj.comprarBoletos(req.body);
-    console.log(">:(", resModel);
+    let resModel = await objPeliculas.getOneMovie(req.body.idPelicula);
+    let data = (resModel.length) ? PeliculasDto.templatesListarPeliculas(resModel) : PeliculasDto.templatesErrorPeliculas()
+    if(data.status === 404){
+        return res.status(data.status).json(data);
+    }
+    if(data.status === 200){
+        resModel = await objUsuarios.buscarUnUsuario(req.body.idUsuario)
+        data = (resModel.length) ? PeliculasDto.templatesListarPeliculas(resModel) : PeliculasDto.templatesErrorPeliculas()
+    }
 
-    let data = (resModel.length) ? BoletasDto.templatesMostrarBoletas(resModel) : BoletasDto.templatesErrorBoletas()
     res.status(data.status).json(data);
 }
 
