@@ -31,7 +31,7 @@ module.exports = class Usuarios extends Connect {
         let res = await this.collection.aggregate([
             {
                 $match: {
-                  _id : new ObjectId('66a55b542de7f97b635de2c3')
+                  _id : idUsuario
                 }
             }
         ]).toArray()

@@ -1,4 +1,4 @@
-const connect = require("../../../helpers/db/connect")
+const connect = require("../helpers/db/connect")
 const {ObjectId} = require ("mongodb")
 
 module.exports = class funciones extends connect {

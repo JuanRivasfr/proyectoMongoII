@@ -3,11 +3,6 @@ const {ObjectId} = require("mongodb")
 
 module.exports = class boletas extends connect {
     static instance
-    /**
-     * Crea una instancia de boletas.
-     * Si ya existe una instancia, retorna esa instancia.
-     * Configura la conexión a la base de datos y la colección "boletas".
-     */
     constructor() {
         if (typeof boletas.instance === "object"){
             return boletas.instance
@@ -44,17 +39,9 @@ module.exports = class boletas extends connect {
    * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la compra o un mensaje de error.
    */
 
-
-
     async comprarBoletos(obj){
         
         let {idPelicula, fechaFuncion, horaInicio, asientos, idUsuario} = obj
-
-        
-        //Validar que la fecha sea actual o futura
-        if(fechaFuncion.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)){
-            return {error: "La fecha debe ser la actual o futura"}
-        }
 
         let res = await this.db.collection("peliculas").aggregate(
             [
@@ -85,84 +72,7 @@ module.exports = class boletas extends connect {
             ]
         ).toArray()
 
-        if(res.length === 0){
-            return({ error: "La pelicula no tiene funciones disponibles"})
-        }
-
-        let funciones = res[0].funciones
-        let banderaFunciones = false
-        let banderaFuncionesHora = false
-        let idFuncion = null
-        for (let i = 0; i < funciones.length; i++) {
-            if(funciones[i].fecha.setHours(0, 0, 0, 0) === fechaFuncion.setHours(0, 0, 0, 0)){
-                banderaFunciones = true
-                if(funciones[i].hora_inicio === horaInicio){
-                    banderaFuncionesHora = true
-                    idFuncion = funciones[i]._id
-                }
-            }
-        }
-
-        if(!banderaFunciones){
-            return{error: "No hay funciones para la pelicula estipulada en esa fecha"}
-        }
-
-        if(!banderaFuncionesHora){
-            return{error: "No hay funciones en esa hora en esa fecha para la pelicula estipulada"}
-        }
-        
-        let asientosRes = await this.collection.aggregate(
-            [
-                {
-                  $lookup: {
-                    from: "funciones",
-                    localField: "funcion_id",
-                    foreignField: "_id",
-                    as: "funciones"
-                  }
-                },
-                {
-                  $match: {
-                    "funciones._id" : new ObjectId(idFuncion)
-                  }
-                },
-                {
-                  $group: {
-                    _id: "$funciones.sala_id",
-                    fieldN: {
-                      $push: "$asientos"
-                    }
-                  }
-                },
-                {
-                  $unwind: "$_id"
-                },
-                {
-                  $project: {
-                    asientosOcupados: {
-                      $reduce: {
-                        input: "$fieldN",
-                        initialValue: [],
-                        in: {
-                          $concatArrays: ["$$value", "$$this"]
-                        }
-                      }
-                    },
-                    idSala: "$_id",
-                    _id: 0,
-                  }
-                }
-              ]
-        ).toArray()
-        let {asientosOcupados, idSala, precio} = asientosRes[0]
-        
-        
-        if(asientosOcupados.length > 0){
-            const asientosConflictivos = asientos.filter(val => asientosOcupados.includes(val))
-            if(asientosConflictivos.length > 0){
-                return{ error : `Los siguientes asientos ya están ocupados: ${asientosConflictivos.join(", ")}`}
-            }
-        }
+        return res
         
         let salaRes = await this.db.collection("salas").aggregate(
             [
@@ -489,7 +399,55 @@ module.exports = class boletas extends connect {
       }
       else{
         return res
-      }
-      
+      } 
     }
+
+    async disponibilidadAsientosCompraBoletos(idFuncion){
+      let asientosRes = await this.collection.aggregate(
+          [
+              {
+                $lookup: {
+                  from: "funciones",
+                  localField: "funcion_id",
+                  foreignField: "_id",
+                  as: "funciones"
+                }
+              },
+              {
+                $match: {
+                  "funciones._id" : new ObjectId(idFuncion)
+                }
+              },
+              {
+                $group: {
+                  _id: "$funciones.sala_id",
+                  fieldN: {
+                    $push: "$asientos"
+                  }
+                }
+              },
+              {
+                $unwind: "$_id"
+              },
+              {
+                $project: {
+                  asientosOcupados: {
+                    $reduce: {
+                      input: "$fieldN",
+                      initialValue: [],
+                      in: {
+                        $concatArrays: ["$$value", "$$this"]
+                      }
+                    }
+                  },
+                  idSala: "$_id",
+                  _id: 0,
+                }
+              }
+            ]
+      ).toArray()
+      return asientosRes
+
+    }
+
 }
