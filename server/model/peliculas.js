@@ -82,11 +82,6 @@ module.exports = class peliculas extends connect {
 
     async getOneMovie(idPelicula){
 
-        const peliculaExiste = await this.collection.findOne({_id : new ObjectId(idPelicula)})
-        if(!peliculaExiste){
-            return { error : "La pelicula no existe"}
-        }
-
         let res = await this.collection.aggregate([
             {
                 $match: {

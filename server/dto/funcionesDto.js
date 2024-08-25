@@ -6,6 +6,13 @@ module.exports = class funcionesDto{
         }
     }
 
+    templatesErrorFunciones(){
+        return {
+            status: 404,
+            data: "No se encontro la funcion"
+        }
+    }
+
     templatesErrorFechaFuncion(){
         return {
             status: 404,

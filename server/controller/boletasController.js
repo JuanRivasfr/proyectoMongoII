@@ -154,6 +154,70 @@ const comprarUnBoleto = async(req, res) => {
     res.status(data.status).json(data);
 }
 
+const reservaUnBoleto = async(req, res) => {
+    const FuncionesDto = new funcionesDto()
+    const UsuariosDto = new usuariosDto()
+    const BoletasDto = new boletasDto()
+    const objUsuarios = new usuarios()
+    const objBoletas = new boletas()
+    const objFunciones = new funciones()
+    let precioAux
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+    req.body.idFuncion = new ObjectId(req.body.idFuncion)
+    req.body.idUsuario = new ObjectId(req.body.idUsuario)
+    let resModel = await objFunciones.buscarUnaFuncion(req.body.idFuncion)
+    let data = (resModel.length) ? FuncionesDto.templatesMostrarFunciones(resModel) : FuncionesDto.templatesErrorFunciones()
+    if(data.status === 200){
+        resModel = await objUsuarios.buscarUnUsuario(req.body.idUsuario)
+        data = (resModel.length) ? UsuariosDto.templatesListarUsuarios(resModel) : UsuariosDto.templatesErrorUsuarios()
+    }
+    else if(data.status === 404){
+        return res.status(data.status).json(data);
+    }
+    if(data.status === 200){
+        resModel = await objBoletas.reservarAsientos(req.body)
+        let {asientosTotales, precio, asientosOcupados} = resModel[0]
+        precioAux = precio
+        const asientosDisponibles = asientosTotales.filter(val => {
+            return (asientosTotales.includes(val) && !asientosOcupados.includes(val))
+        })
+        const asientosConflictivos = asientosTotales.filter(val => {
+            return (!asientosDisponibles.includes(val) && req.body.asientos.includes(val))
+        })
+        if(asientosConflictivos.length > 0){
+            msg = `Los siguientes asientos estan ocupados: ${asientosConflictivos.join(", ")}`
+            data = FuncionesDto.templatesErrorAsientosOcupados(msg)
+            return res.status(data.status).json(data);
+        }
+        const asientosNoExisten = req.body.asientos.filter(val => {
+        return (req.body.asientos.includes(val) && !asientosTotales.includes(val))
+        })
+        if(asientosNoExisten.length > 0){
+            msg = `Los siguientes asientos no existen: ${asientosNoExisten.join(", ")}`
+            data = FuncionesDto.templatesErrorAsientosOcupados(msg)
+            return res.status(data.status).json(data);
+        }
+        else{
+            data = FuncionesDto.templatesMostrarFunciones(resModel)
+        }
+    }
+    if(data.status === 200){
+        resModel = await objBoletas.agregarBoletos(req.body.asientos, req.body.idFuncion, req.body.idUsuario, "reserva")
+        let totalAsientosComprados = req.body.asientos.length
+        let precioTotal = precioAux * totalAsientosComprados
+        if(resModel.acknowledged === true){
+            let msg = "Se reservaron los boletos de forma exitosa"
+            data = BoletasDto.templatesCompraRealizadaBoletas(msg, precioTotal, req.body.idUsuario, req.body.idFuncion, req.body.asientos)
+        }
+        else{
+            data = BoletasDto.templatesErrorBoletas()
+        }
+    }
+    res.status(data.status).json(data);
+}
+
 module.exports = {
-    comprarUnBoleto
+    comprarUnBoleto,
+    reservaUnBoleto
 }

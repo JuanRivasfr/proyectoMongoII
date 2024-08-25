@@ -101,16 +101,6 @@ module.exports = class boletas extends connect {
     async reservarAsientos(obj){
       let {idFuncion, asientos, idUsuario} = obj
 
-      const funcionExiste = await this.db.collection("funciones").findOne({_id : idFuncion})
-        if(!funcionExiste){
-            return { error : "La funcion no existe"}
-        }
-
-      const usuarioExiste = await this.db.collection("usuarios").findOne({_id : idUsuario})
-      if(!usuarioExiste){
-          return { error : "El usuario no existe"}
-      } 
-
       let res = await this.db.collection("funciones").aggregate(
         [
           {
@@ -170,32 +160,8 @@ module.exports = class boletas extends connect {
           }
         ]
       ).toArray()
-      
-      let {asientosTotales, precio, asientosOcupados} = res[0]
 
-      const asientosCombinados = [...asientosTotales, ...asientosOcupados]
-
-      const asientosDisponibles = asientosTotales.filter(val => {
-          return (asientosTotales.includes(val) && !asientosOcupados.includes(val))
-      })
-
-      const asientosConflictivos = asientosTotales.filter(val => {
-        return (!asientosDisponibles.includes(val) && asientos.includes(val))
-      })
-      
-      if(asientosConflictivos.length > 0){
-        return{ error : `Los siguientes asientos estan ocupados: ${asientosConflictivos.join(", ")}`}
-      }
-
-      const asientosNoExisten = asientos.filter(val => {
-        return (asientos.includes(val) && !asientosTotales.includes(val))
-      })
-
-      if(asientosNoExisten.length > 0){
-        return{ error : `Los siguientes asientos no existen: ${asientosNoExisten.join(", ")}`}
-      }
-
-      return(this.agregarBoletos(asientos, idFuncion, idUsuario, "reserva", precio))
+      return res
 
     }
 

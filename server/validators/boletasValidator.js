@@ -27,4 +27,14 @@ exports.ticketValidationRulesCreation = () => {
             }).withMessage('Cada elemento del array debe ser una letra mayúscula seguida de uno o dos números.'),
             body('idUsuario').notEmpty().isMongoId().withMessage('El idUsuario es obligatorio')
         ]
-    };
+};
+
+exports.reservaValidationRulesCreation = () => {
+    return [
+        body('idFuncion').notEmpty().isMongoId().withMessage('El id es obligatorio'),
+        body('asientos').notEmpty().isArray().withMessage('El campo debe ser un array').custom((array) => {
+            return array.every(elemento => /^[A-Z]\d{1,2}$/.test(elemento))
+        }).withMessage('Cada elemento del array debe ser una letra mayúscula seguida de uno o dos números.'),
+        body('idUsuario').notEmpty().isMongoId().withMessage('El idUsuario es obligatorio')
+    ]
+};

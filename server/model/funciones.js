@@ -37,12 +37,6 @@ module.exports = class funciones extends connect {
 
     async disponibilidadAsientos(idFuncion){
 
-        //Validar si existe la funcion
-        const funcionExiste = await this.collection.findOne({_id : new ObjectId(idFuncion)})
-        if(!funcionExiste){
-            return { error : "La funcion no existe"}
-        }
-
         let res = await this.collection.aggregate(
             [
                 {
@@ -98,21 +92,19 @@ module.exports = class funciones extends connect {
                 }
               ]
         ).toArray()
-        let {asientosSala, asientosOcupados} = res[0]
-
-        const asientosCombinados = [...asientosSala, ...asientosOcupados]
-
-        const asientosDisponibles = asientosCombinados.filter(val => {
-            return (asientosSala.includes(val) && !asientosOcupados.includes(val))
-        })
-
-        if (asientosDisponibles.length > 0) {
-            return {
-                success: "Hay asientos disponibles",
-                asientosDisponibles: asientosDisponibles
-            };
-        } else {
-            return { error: "No hay asientos disponibles" };
-        }
+        return res
     }
+
+    async buscarUnaFuncion(idFuncion){
+
+      let res = await this.collection.aggregate([
+          {
+              $match: {
+                _id : idFuncion
+              }
+          }
+      ]).toArray()
+      return res
+
+  }
 }
