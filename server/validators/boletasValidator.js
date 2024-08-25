@@ -38,3 +38,9 @@ exports.reservaValidationRulesCreation = () => {
         body('idUsuario').notEmpty().isMongoId().withMessage('El idUsuario es obligatorio')
     ]
 };
+
+exports.boletosValidationRulesFindBoleto = () => {
+    return [
+        query('id', 'El id no se envió').notEmpty().isMongoId().withMessage("El id no es valido")
+    ];
+};

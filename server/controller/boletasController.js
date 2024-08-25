@@ -217,7 +217,34 @@ const reservaUnBoleto = async(req, res) => {
     res.status(data.status).json(data);
 }
 
+const cancelarReserva = async(req,res) => {
+    const BoletasDto = new boletasDto()
+    const objBoletas = new boletas()
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+    req.query.id = new ObjectId(req.query.id)
+    let resModel = await objBoletas.buscarUnBoleto(req.query.id)
+    let data = (resModel.length) ? BoletasDto.templatesMostrarBoletas(resModel) : BoletasDto.templatesErrorBoleto()
+    if(data.status === 200){
+        let {_id, asientos, fecha_adquisicion, funcion_id, cliente_id, tipo_compra} = resModel[0]
+        if(tipo_compra === "compra"){
+            data = BoletasDto.templatesErrorBoletoTipoCompra()
+        }
+    }
+    if(data.status === 200){
+        resModel = await objBoletas.eliminarReserva(req.query.id)
+        if(resModel.acknowledged === true){
+            data = BoletasDto.templatesMostrarBoletas(resModel)
+        }
+        else{
+            data = BoletasDto.templatesErrorEliminarReserva()
+        }
+    }
+    res.status(data.status).json(data);
+} 
 module.exports = {
     comprarUnBoleto,
-    reservaUnBoleto
+    reservaUnBoleto,
+    cancelarReserva
 }
+

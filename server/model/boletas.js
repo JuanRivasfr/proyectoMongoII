@@ -166,30 +166,6 @@ module.exports = class boletas extends connect {
     }
 
     /**
-   * Valida una reserva de boleto.
-   * 
-   * @async
-   * @param {string} idBoleto - El ID del boleto.
-   * @returns {Promise<Object>} Una promesa que resuelve a un objeto que contiene el resultado de la operación o un error si la validación falla.
-   */
-
-    async validarReserva(idBoleto){
-      const boletoExiste = await this.collection.findOne({_id : new ObjectId(idBoleto)})
-        if(!boletoExiste){
-            return { error : "El boleto no existe"}
-      }
-      
-      let {_id, asientos, fecha_adquisicion, funcion_id, cliente_id, tipo_compra} = boletoExiste
-      
-
-      if(tipo_compra === "compra"){
-        return{ error : "Los boletos deben ser una reserva no una compra"}
-      }
-
-      return this.eliminarReserva(idBoleto)
-    }
-
-    /**
    * Elimina una reserva de boleto.
    * 
    * @async
@@ -201,11 +177,7 @@ module.exports = class boletas extends connect {
       let res = await this.collection.deleteOne({
         _id : idBoleto
       })
-
-      if(res.acknowledged === true){
-        return {sucess: "La reserva se ha eliminado de forma correcta"}
-      }
-      
+      return res
     }
 
     /**
@@ -369,5 +341,18 @@ module.exports = class boletas extends connect {
       return asientosRes
 
     }
+
+    async buscarUnBoleto(idBoleto){
+
+      let res = await this.collection.aggregate([
+          {
+              $match: {
+                _id : idBoleto
+              }
+          }
+      ]).toArray()
+      return res
+
+  }
 
 }

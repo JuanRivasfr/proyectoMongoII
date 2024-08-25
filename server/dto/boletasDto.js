@@ -13,6 +13,13 @@ module.exports = class boletasDto{
         }
     }
 
+    templatesErrorBoleto(){
+        return {
+            status: 404,
+            message: "No se encontro el boleto"
+        }
+    }
+
     templatesCompraRealizadaBoletas(msg, precioTotal, usuarioId, funcionId, asientos){
         return {
             status: 200,
@@ -21,6 +28,20 @@ module.exports = class boletasDto{
             idUsuario : usuarioId,
             funcionId : funcionId,
             asientos : asientos
+        }
+    }
+
+    templatesErrorBoletoTipoCompra(){
+        return {
+            status: 404,
+            message: "Los boletos deben ser una reserva no una compra"
+        }
+    }
+
+    templatesErrorEliminarReserva(){
+        return {
+            status: 404,
+            message: "Ocurrio un error al intentar eliminar la reserva"
         }
     }
 
