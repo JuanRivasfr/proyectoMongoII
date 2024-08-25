@@ -1,4 +1,4 @@
-module.exports = class peliculasDto{
+module.exports = class usuariosDto{
     templatesListarUsuarios(arg){
         return {
             status: 200,

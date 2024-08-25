@@ -1,10 +1,12 @@
 const peliculas = require("../model/peliculas")
 const boletas = require("../model/boletas");
 const usuarios = require("../model/usuarios")
+const salas = require("../model/salas")
 const funciones = require("../model/funciones")
 const boletasDto = require("../dto/boletasDto");
 const peliculasDto = require("../dto/peliculasDto")
 const usuariosDto = require("../dto/usuariosDto")
+const salasDto = require("../dto/salasDto")
 const funcionesDto = require("../dto/funcionesDto")
 const { ObjectId } = require('mongodb');
 const {validationResult} = require("express-validator");
@@ -14,8 +16,10 @@ const comprarUnBoleto = async(req, res) => {
     const PeliculasDto = new peliculasDto()
     const UsuariosDto = new usuariosDto()
     const FuncionesDto = new funcionesDto()
+    const SalasDto = new salasDto()
     const objPeliculas = new peliculas()
     const objBoletas = new boletas()
+    const objSalas = new salas()
     const objUsuarios = new usuarios()
     const objFunciones = new funciones()
     const errors = validationResult(req);
@@ -23,6 +27,10 @@ const comprarUnBoleto = async(req, res) => {
     let data
     //Se crea la variable q contendra el id de la funcion
     let idFuncion
+    //se crea la vaiable q contendra el id de la sala
+    let idSalaAux
+    //Se crea la variable q contendra el precio de la sala
+    let precioSalaAux
     if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
     req.body.idPelicula = new ObjectId(req.body.idPelicula)
     req.body.fechaFuncion = new Date(req.body.fechaFuncion)
@@ -92,7 +100,8 @@ const comprarUnBoleto = async(req, res) => {
     //Sigue con el proceso y valida que los asientos esten disponibles
     if(data.status === 200){
         resModel = await objBoletas.disponibilidadAsientosCompraBoletos(idFuncion)
-        let {asientosOcupados, idSala, precio} = resModel[0] 
+        let {asientosOcupados, idSala} = resModel[0]
+        idSalaAux = idSala
         if(asientosOcupados.length > 0){
             const asientosConflictivos = req.body.asientos.filter(val => asientosOcupados.includes(val))
             if(asientosConflictivos.length > 0){
@@ -111,26 +120,39 @@ const comprarUnBoleto = async(req, res) => {
     if(data.status === 404){
         return res.status(data.status).json(data);
     }
+    //Sigue con el proceso y valida si los asientos existen
+    if(data.status === 200){
+        resModel = await objSalas.obtenerPrecioSalaAsientosTotales(idSalaAux)
+        let {precio : precioSala, asientos: asientosTotales} = resModel[0]
+        precioSalaAux = precioSala
+        console.log(precioSalaAux);
+        const asientosNoExisten =   req.body.asientos.filter(val => !asientosTotales.includes(val))
+        if(asientosNoExisten.length > 0){
+            let msg =  `Los siguientes asientos no existen: ${asientosNoExisten.join(", ")}`
+            data = SalasDto.templatesErrorAsientosExistentes(msg)
+        }
+        else{
+            data = SalasDto.templatesMostrarSalas()
+        }
+    }
+    //Devuelve error si no existen los asientos
+    if(data.status === 404){
+        return res.status(data.status).json(data);
+    }
+    if(data.status === 200){
+        resModel = await objBoletas.agregarBoletos(req.body.asientos, idFuncion, req.body.idUsuario, "compra")
+        let totalAsientosComprados = req.body.asientos.length
+        let precioTotal = precioSalaAux * totalAsientosComprados
+        if(resModel.acknowledged === true){
+            let msg = "Se compraron los boletos de forma exitosa"
+            data = BoletasDto.templatesCompraRealizadaBoletas(msg, precioTotal, req.body.idUsuario, idFuncion, req.body.asientos)
+        }
+        else{
+            data = BoletasDto.templatesErrorBoletas()
+        }
+    }
     res.status(data.status).json(data);
 }
-
-// const crearUsuario = async (req, res) => {
-//     const errors = validationResult(req);
-//     if(!errors.isEmpty()) return res.status(400).json({errors: errors.array() });
-//     const usuarioDTO = new UsuarioDTO();
-//     const obj = new Usuario();
-//     let resModel = await obj.findOneClienteByNickOrEmail(req.body);
-//     let data = (resModel) ? usuarioDTO.templateExistUser(resModel) : usuarioDTO.templateNotUsers();
-//     if(data.status == 200) return res.status(data.status).json(data);
-//     if(data.status == 404) resModel = await obj.saveUsuario(req.body);
-//     data = (resModel.acknowledged) ? usuarioDTO.templateUserSaved(req.body) : usuarioDTO.templateUserError(resModel);
-//     if(data.status == 500) return res.status(data.status).json(data);
-//     if(data.status == 201) data = usuarioDTO.typeToRole(req.body);
-//     if(data.tipo == "Administrador"){resModel = await obj.createUsuarioAdmin(data)} else{resModel = await obj.createUsuarioCliente(data)};
-//     data = (resModel.ok) ? usuarioDTO.templateUserSaved(req.body) : usuarioDTO.templateUserError(resModel);
-//     if(data.status == 500) return res.status(data.status).json(data);
-//     return res.status(data.status).json(data);
-// }
 
 module.exports = {
     comprarUnBoleto

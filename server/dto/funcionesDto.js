@@ -1,4 +1,4 @@
-module.exports = class boletasDto{
+module.exports = class funcionesDto{
     templatesMostrarFunciones(arg){
         return {
             status: 200,

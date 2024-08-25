@@ -19,12 +19,12 @@ module.exports = class salas extends connect {
         return activities
     }
 
-    async obtenerPrecioSalaAsientosTotales(){
+    async obtenerPrecioSalaAsientosTotales(idSalaAux){
         let salaRes = await this.collection.aggregate(
             [
                 {
                   $match: {
-                    _id : new ObjectId('66a59a792de7f97b635de2d7')
+                    _id : idSalaAux
                   }
                 },
                 {

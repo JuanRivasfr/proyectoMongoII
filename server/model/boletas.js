@@ -73,36 +73,9 @@ module.exports = class boletas extends connect {
         ).toArray()
 
         return res
-        
-        let salaRes = await this.db.collection("salas").aggregate(
-            [
-                {
-                  $match: {
-                    _id : new ObjectId('66a59a792de7f97b635de2d7')
-                  }
-                },
-                {
-                  $project: {
-                    _id: 0,
-                    asientos: 1,
-                    precio: 1
-                  }
-                }
-            ]
-        ).toArray()
-        
-        let {precio : precioSala, asientos: asientosTotales} = salaRes[0]
-        
-        const asientosNoExisten =   asientos.filter(val => !asientosTotales.includes(val))
-        if(asientosNoExisten.length > 0){
-            return{ error : `Los siguientes asientos no existen: ${asientosNoExisten.join(", ")}`}
-        }
-
-        return(this.agregarBoletos(asientos, idFuncion, idUsuario, "compra", precioSala))
-
     }
     
-    async agregarBoletos(asientos, funcionId, usuarioId, tipo_compra, precioSala){
+    async agregarBoletos(asientos, funcionId, usuarioId, tipo_compra){
         let res = await this.collection.insertOne({
             asientos : asientos,
             fecha_adquisicion : new Date(),
@@ -110,26 +83,7 @@ module.exports = class boletas extends connect {
             cliente_id : usuarioId,
             tipo_compra : tipo_compra
         })
-        let totalAsientosComprados = asientos.length
-        let precioTotal = precioSala * totalAsientosComprados
-        
-        if(res.acknowledged === true){
-          if(tipo_compra === "compra"){
-            return{sucess : "Se compraron los boletos de forma exitosa",
-              precioTotal : precioTotal,
-              idUsuario : usuarioId,
-              funcionId : funcionId,
-              asientos : asientos
-            }
-          }
-          if(tipo_compra === "reserva"){
-            return{sucess : "Se reservaron los boletos de forma exitosa",
-              precioTotal : precioTotal
-            } 
-          }
-        }
-        console.log(res);
-        
+        return res
     }
 
     /**

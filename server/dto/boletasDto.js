@@ -13,4 +13,15 @@ module.exports = class boletasDto{
         }
     }
 
+    templatesCompraRealizadaBoletas(msg, precioTotal, usuarioId, funcionId, asientos){
+        return {
+            status: 200,
+            message: msg,
+            precioTotal : precioTotal,
+            idUsuario : usuarioId,
+            funcionId : funcionId,
+            asientos : asientos
+        }
+    }
+
 }
