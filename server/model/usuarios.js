@@ -96,30 +96,14 @@ module.exports = class Usuarios extends Connect {
      * - Si hubo un error: `{ error: "mensaje de error" }`
      */
 
-    async cambiarRolUsuario(obj){
-        let {idUsuario, nuevoRol} = obj
-
-        const usuarioExiste = await this.collection.findOne({_id : new ObjectId(idUsuario)})
-        if(!usuarioExiste){
-            return { error : "El usuario no existe"}
-        }
-
-        if(nuevoRol !== "VIP" && nuevoRol !== "estandar"){
-            return {error: "El nuevo rol debe ser VIP o estandar"}
-        }
-            
-        if(usuarioExiste.categoria.nombre === nuevoRol){
-            return{error: "El usuario ya cuenta con ese rol"}
-        }
+    async cambiarRolUsuario(idUsuario, nuevoRol){
 
         const actualizarUsuario = await this.collection.updateOne(
             { _id: idUsuario },
             { $set: { 'categoria.nombre': nuevoRol }}
         );
 
-        if(actualizarUsuario.acknowledged === true){
-            return{sucess: "Cambio realizado con exito"}
-        }
+        return actualizarUsuario
 
     }
 
@@ -133,16 +117,7 @@ module.exports = class Usuarios extends Connect {
      */
 
     async consultarUsuariosPorRol(rol){
-
-        if(rol === null){
-            let resTodos = await this.collection.find({}).toArray()
-            return resTodos
-        }
-
-        if(rol !== "VIP" && rol !== "estandar" && rol !== "administrador"){
-            return {error : "El rol a consultar debe ser VIP, estandar, administrador o null"}
-        }
-
+        
         let res = await this.collection.aggregate(
         [
             {

@@ -6,7 +6,7 @@ module.exports = class usuariosDto{
         }
     }
 
-    templatesErrorUsuarios(){
+    templatesErrorUsuariosNoEncontrado(){
         return {
             status: 404,
             message: "No se encontro el usuario"

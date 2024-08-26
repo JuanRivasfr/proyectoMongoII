@@ -88,13 +88,66 @@ const encontrarUnUsuario = async(req, res) => {
     const objUsuarios = new usuarios()
     const errors = validationResult(req);
     if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
-    req.query.id = new ObjectId(req.query.id)
-    console.log(req.query.id);
     let resModel = await objUsuarios.buscarUnUsuario(req.query.id)
+    console.log(resModel);
+    let data = (resModel.length) ? UsuarioDto.templatesListarUsuarios(resModel) : UsuarioDto.templatesErrorUsuariosNoEncontrado()
+    res.status(data.status).json(data);
+}
+
+const cambiarRol = async(req, res) => {
+    const objUsuarios = new usuarios()
+    const UsuariosDto = new usuariosDto()
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+    req.body.idUsuario = new ObjectId(req.body.idUsuario)
+    let resModel = await objUsuarios.buscarUnUsuario(req.body.idUsuario)
+    let data = (resModel.length) ? UsuariosDto.templatesListarUsuarios(resModel) : UsuariosDto.templatesErrorUsuariosNoEncontrado()
+    let {idUsuario, nuevoRol} = req.body
+    if(data.status === 200){
+        if(resModel[0].categoria.nombre === nuevoRol){
+            let msg = "El usuario ya cuenta con ese rol"
+            data = UsuariosDto.templatesErrorUsuarios(msg)
+            return res.status(data.status).json(data);
+        }
+    }
+    if(data.status === 200){
+        resModel = await objUsuarios.cambiarRolUsuario(idUsuario, nuevoRol)
+        if(resModel.acknowledged === true){
+            let msg = "Cambio realizado con exito"
+            data = UsuariosDto.templatesListarUsuarios(msg)
+        }
+        else{
+            data = UsuariosDto.templatesErrorConsultarUsuarios()
+            return res.status(data.status).json(data);
+        }
+    }
+    res.status(data.status).json(data);
+}
+
+const consultarPorRol = async(req, res) => {
+    let resModel
+    let data
+    const objUsuarios = new usuarios()
+    const UsuariosDto = new usuariosDto()
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+    if(req.query.rol === "null"){
+        req.query.rol = null
+    }
+    if(req.query.rol === null){
+        resModel = await objUsuarios.getAllMatch() 
+        data = (resModel.length) ? UsuariosDto.templatesListarUsuarios(resModel) : UsuariosDto.templatesErrorConsultarUsuarios()
+    }
+    if(req.query.rol === "VIP" || req.query.rol === "administrador" || req.query.rol === "estandar"){
+        resModel = await objUsuarios.consultarUsuariosPorRol(req.query.rol)
+        data = (resModel.length) ? UsuariosDto.templatesListarUsuarios(resModel) : UsuariosDto.templatesErrorConsultarUsuarios()
+    }
     res.status(data.status).json(data);
 }
 
 module.exports = {
     crearUsuario,
-    encontrarUnUsuario
+    encontrarUnUsuario,
+    cambiarRol,
+    consultarPorRol
 }

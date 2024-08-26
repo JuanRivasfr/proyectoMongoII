@@ -64,3 +64,24 @@ exports.usuariosValidationReglasEncotrarUsuario = () => {
     ];
 };
 
+exports.usuariosValidacionCambiarRol = () => {
+    return [
+        body('idUsuario').notEmpty().isMongoId().withMessage('El id es obligatorio'),
+        body('nuevoRol')
+            .notEmpty().withMessage('El campo nuevoRol es obligatorio')
+            .isIn(['VIP', 'estandar', 'administrador']).withMessage('El nuevoRol debe ser "VIP", "estandar" o "administrador"')
+    ]
+};
+
+exports.usuariosValidationReglasEncontrarPorRol = () => {
+    return [
+        query('rol')
+            .custom(value => {
+                if (value === 'null' || value === 'VIP' || value === 'estandar' || value === 'administrador') {
+                    return true;
+                }
+                throw new Error('El rol debe ser "null", "VIP", "estandar" o "administrador"');
+            })
+    ];
+};
+
