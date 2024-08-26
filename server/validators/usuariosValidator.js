@@ -16,24 +16,45 @@ exports.usuarioValidationEmpty = () => {
         })
     ];
 };
+  
+exports.validationCreacionUsuario = () => {
+    return [
+        body('identificacion')
+        .notEmpty().withMessage('La identificación es obligatoria')
+        .isInt({ min: 1 }).withMessage('La identificación debe ser un número entero positivo'),
+        
+        body('nombre')
+        .notEmpty().withMessage('El nombre es obligatorio')
+        .isString().withMessage('El nombre debe ser una cadena de texto'),
+        
+        body('apellido')
+        .notEmpty().withMessage('El apellido es obligatorio')
+        .isString().withMessage('El apellido debe ser una cadena de texto'),
+    
+        body('nick')
+        .notEmpty().withMessage('El nick es obligatorio')
+        .isString().withMessage('El nick debe ser una cadena de texto'),
+        
+        body('email')
+        .notEmpty().withMessage('El email es obligatorio')
+        .isEmail().withMessage('El email debe ser válido'),
+        
+        body('telefono')
+        .isArray({ min: 1 }).withMessage('El teléfono debe ser un array con al menos un elemento')
+        .custom((value) => {
+        return value.every(num => typeof num === 'string');
+        }).withMessage('Cada teléfono debe ser una cadena de texto')
+        .notEmpty().withMessage('El teléfono no puede estar vacío'),
+        
+        body('categoria')
+        .notEmpty().withMessage('La categoría es obligatoria')
+        .isObject().withMessage('La categoría debe ser un objeto')
+        .custom((value) => {
+        return value.nombre && typeof value.nombre === 'string' && value.descuento !== undefined && typeof value.descuento === 'number';
+        }).withMessage('La categoría debe tener un nombre (string) y un descuento (number)'),
+        
+        body('tarjeta')
+        .isArray().withMessage('La tarjeta debe ser un array')
+    ]
+};
 
-
-
-
-// exports.usuarioValidationRulesCreation = () => {
-//     return [
-//         body('nombre').notEmpty().isString().withMessage('El nombre es obligatorio'),
-//         body('apellido').notEmpty().isString().withMessage('El apellido es obligatorio'),
-//         body('nick').notEmpty().isString().withMessage('El nick es obligatorio'),
-//         body('pwd').notEmpty().isString().withMessage('La contraseña es obligatoria'),
-//         body('email').notEmpty().isEmail().withMessage('El email es obligatorio'),
-//         body('telefono').notEmpty().isString().withMessage('El telefono es obligatorio'),
-//         body('tipo', 'El tipo no se envio').notEmpty().exists().custom((value) => {
-//             if(value && !['Estandar', 'VIP', 'Admin'].includes(value)) {
-//                 throw new Error(`Solo hay tres roles disponibles 'Estandar', 'VIP' y 'Admin'`);
-//             }
-//             return true;
-//         }),
-//         body('numero_tarjeta').optional().isLength({min: 16, max:16}).withMessage('El numero tiene que ser de 16 digitos').matches(/^\d+$/).withMessage('La tarjeta debe contener solo números')
-//     ]
-// };

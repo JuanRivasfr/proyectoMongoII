@@ -44,3 +44,10 @@ exports.boletosValidationRulesFindBoleto = () => {
         query('id', 'El id no se envió').notEmpty().isMongoId().withMessage("El id no es valido")
     ];
 };
+
+exports.ticketValidationDescuentoAplicado = () => {
+    return [
+        body('precioTotal').notEmpty().withMessage('El precioTotal es obligatorio').isFloat({ min: 0 }).withMessage('El precio total debe ser un número válido'),
+        body('idUsuario').notEmpty().isMongoId().withMessage('El id es obligatorio')
+    ]
+};

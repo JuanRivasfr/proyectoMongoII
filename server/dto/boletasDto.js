@@ -45,4 +45,19 @@ module.exports = class boletasDto{
         }
     }
 
+    templatesDescuentoRealizado(precioTotal, descuentoAplicado){
+        return {
+            status: 200,
+            precioTotal: precioTotal,
+            descuentoAplicado: descuentoAplicado
+        }
+    }
+
+    templatesError(msg){
+        return {
+            status: 404,
+            msg: msg
+        }
+    }
+
 }

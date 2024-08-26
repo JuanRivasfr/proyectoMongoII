@@ -13,4 +13,27 @@ module.exports = class usuariosDto{
         }
     }
 
+    templatesErrorConsultarUsuarios(){
+        return {
+            status: 404,
+            message: "Ocurrio un error"
+        }
+    }
+
+    templatesErrorUsuarios(msg){
+        return {
+            status: 404,
+            message: msg
+        }
+    }
+
+    templatesUsuarioCreado(usuario, psw){
+        return {
+            status: 200,
+            message: "El usuario se creo exitosamente",
+            usuario: usuario,
+            pdw: psw
+        }
+    }
+
 }

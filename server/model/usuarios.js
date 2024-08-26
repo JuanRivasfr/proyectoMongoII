@@ -22,8 +22,8 @@ module.exports = class Usuarios extends Connect {
      */
 
     async getAllMatch() {
-        let activities  = await this.collection.find({}).toArray()
-        return activities
+        let res  = await this.collection.find({}).toArray()
+        return res
     }
 
     async buscarUnUsuario(idUsuario){
@@ -36,51 +36,6 @@ module.exports = class Usuarios extends Connect {
             }
         ]).toArray()
         return res
-
-    }
-
-    /**
-     * Valida la información del usuario para evitar duplicados y luego crea un nuevo usuario.
-     * 
-     * @async
-     * @param {Object} obj - Objeto que contiene los datos del usuario a validar y crear.
-     * @param {string} obj.identificacion - Identificación del usuario.
-     * @param {string} obj.nombre - Nombre del usuario.
-     * @param {string} obj.apellido - Apellido del usuario.
-     * @param {string} obj.nick - Nick del usuario.
-     * @param {string} obj.email - Email del usuario.
-     * @param {Array<string>} obj.telefono - Lista de números de teléfono del usuario.
-     * @param {string} obj.categoria - Categoría del usuario.
-     * @param {Array<Object>} obj.tarjeta - Información de la tarjeta del usuario.
-     * @returns {Promise<Object>} Una promesa que resuelve a un objeto que indica si hubo algún error en la validación de datos o si el usuario fue creado correctamente.
-     */
-
-    async validacionUsuario(obj){
-        
-        let {identificacion, nombre, apellido, nick, email, telefono, categoria, tarjeta} = obj
-        let res  = await this.collection.find({}).toArray()
-        for (let i = 0; i < res.length; i++) {
-            if(res[i].identificacion === identificacion){
-                return{error: "Ya existe un usuario con esa identificacion"}
-            }
-            if(res[i].nick === nick){
-                return{error: "Ya existe un usuario con ese nick"}
-            }
-            if(res[i].email === email){
-                return{error: "Ya existe un usuario con ese email"}
-            }
-            if (res[i].telefono && telefono) {
-                for (let j = 0; j < res[i].telefono.length; j++) {
-                    for (let k = 0; k < telefono.length; k++) {
-                        if (res[i].telefono[j] === telefono[k]) {
-                            return { error: "El telefono ya esta registrado" };
-                        }
-                    }
-                }
-            }
-        }
-
-        return(this.crearUsuario(identificacion, nombre, apellido, nick, email, telefono, categoria, tarjeta))
 
     }
 
@@ -112,10 +67,7 @@ module.exports = class Usuarios extends Connect {
             tarjeta: tarjeta
         })
 
-        if(res.acknowledged === true){
-            console.log({sucess: "Usuario creado con exito"})
-            return(this.crearUsuarioMongo(nick, identificacion, categoria.nombre))
-        }
+        return res
     }
 
     /**
@@ -215,20 +167,7 @@ module.exports = class Usuarios extends Connect {
      * @returns {Promise<Object>} Una promesa que resuelve a un objeto con el nombre de usuario y la contraseña.
      */
 
-    async crearUsuarioMongo(nick, pwd, categoria){
-
-        let rol = ""
-        if(categoria === "VIP"){
-            rol = "usuarioVIP"
-        }
-        if(categoria === "estandar"){ 
-            rol = "usuarioEstandar" 
-        }
-        if(categoria === "administrador"){
-            rol = "adminCine"
-        }
-
-        pwd = pwd.toString()
+    async crearUsuarioMongo(nick, pwd, rol){
 
         const newUser = await this.db.command({
             createUser: nick,
@@ -238,7 +177,39 @@ module.exports = class Usuarios extends Connect {
             ]
         })
 
-        return {nick: nick,
-                pwd: pwd}
-    }  
+        return newUser
+    }
+
+    async consultarTarjetaUsuarios(usuarioId){
+        let res = await this.collection.aggregate(
+            [
+              {
+                $match: {
+                  _id: usuarioId
+                }
+              },
+              {
+                $project: {
+                  "categoria": "$categoria.nombre",
+                  "descuento": "$categoria.descuento",
+                  _id: 0,
+                  "estadoTarjeta": {
+                    $ifNull: [
+                      { $arrayElemAt: ["$tarjeta.estado", 0] },
+                      []
+                    ]
+                  }
+                }
+              },
+              {
+                $unwind: {
+                  path: "$estadoTarjeta",
+                  preserveNullAndEmptyArrays: true 
+                }
+              }
+            ]
+        ).toArray();
+
+        return res
+    }
 }

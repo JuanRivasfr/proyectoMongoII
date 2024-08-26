@@ -242,9 +242,49 @@ const cancelarReserva = async(req,res) => {
     }
     res.status(data.status).json(data);
 } 
+
+const aplicarDescuento = async(req, res) => {
+    const BoletasDto = new boletasDto()
+    const UsuariosDto = new usuariosDto()
+    const objUsuarios = new usuarios()
+    const objBoletas = new boletas()
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+    req.body.idUsuario = new ObjectId(req.body.idUsuario)
+    let {precioTotal, idUsuario : usuarioId} = req.body;
+    let resModel = await objUsuarios.consultarTarjetaUsuarios(usuarioId)
+    let data = (resModel.length) ? UsuariosDto.templatesListarUsuarios(resModel) : UsuariosDto.templatesErrorUsuarios()
+    if(data.status === 200){
+        let { categoria, descuento, estadoTarjeta } = resModel[0];
+        if (categoria === "VIP") {
+            if (estadoTarjeta === "activa") {
+                let descuentoAplicado = (precioTotal * (descuento / 100));
+                precioTotal = precioTotal - descuentoAplicado;
+                data = BoletasDto.templatesDescuentoRealizado(precioTotal, descuentoAplicado)
+                console.log(1);
+            } 
+            else if (estadoTarjeta === undefined) {
+                let msg = "El usuario no cuenta con tarjeta"
+                data = BoletasDto.templatesError(msg)
+            } else {
+                let msg = "La tarjeta no esta activa actualmente"
+                data = BoletasDto.templatesError(msg)
+            }
+        } 
+        else{
+            let msg = "El usuario no es VIP"
+            data = BoletasDto.templatesError(msg)
+        }
+    }
+    res.status(data.status).json(data);
+    
+
+}
+
 module.exports = {
     comprarUnBoleto,
     reservaUnBoleto,
-    cancelarReserva
+    cancelarReserva,
+    aplicarDescuento
 }
 
