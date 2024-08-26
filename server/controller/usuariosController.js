@@ -83,6 +83,18 @@ const crearUsuario = async(req, res) => {
     res.status(data.status).json(data); 
 }
 
+const encontrarUnUsuario = async(req, res) => {
+    const UsuarioDto = new usuariosDto()
+    const objUsuarios = new usuarios()
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+    req.query.id = new ObjectId(req.query.id)
+    console.log(req.query.id);
+    let resModel = await objUsuarios.buscarUnUsuario(req.query.id)
+    res.status(data.status).json(data);
+}
+
 module.exports = {
-    crearUsuario
+    crearUsuario,
+    encontrarUnUsuario
 }
