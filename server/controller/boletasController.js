@@ -125,7 +125,6 @@ const comprarUnBoleto = async(req, res) => {
         resModel = await objSalas.obtenerPrecioSalaAsientosTotales(idSalaAux)
         let {precio : precioSala, asientos: asientosTotales} = resModel[0]
         precioSalaAux = precioSala
-        console.log(precioSalaAux);
         const asientosNoExisten =   req.body.asientos.filter(val => !asientosTotales.includes(val))
         if(asientosNoExisten.length > 0){
             let msg =  `Los siguientes asientos no existen: ${asientosNoExisten.join(", ")}`

@@ -17,6 +17,10 @@ app.get("/servicio", (req, res) =>{
     res.sendFile(`${process.env.EXPRESS_STATIC}/views/servicio.html`, {root: __dirname})
 })
 
+app.get("/prueba", (req, res) =>{
+    res.sendFile(`${process.env.EXPRESS_STATIC}/views/prueba.html`, {root: __dirname})
+})
+
 app.use((req, res, next) => {
     req.__dirname = __dirname;
     next();
