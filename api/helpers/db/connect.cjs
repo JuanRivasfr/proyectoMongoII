@@ -1,4 +1,5 @@
 const {MongoClient} = require("mongodb");
+require('dotenv').config();
 
 module.exports = class Connect {
     static instance;
@@ -9,12 +10,12 @@ module.exports = class Connect {
     #cluster;
     #dbName
     constructor() {
-        this.user = process.env.user
-        this.port = process.env.port
-        this.setPass = process.env.pass
-        this.setHost = process.env.host
-        this.setCluster = process.env.cluster
-        this.setDbName = process.env.dbName
+        this.user = process.env.VITE_USER
+        this.port = process.env.VITE_PORT
+        this.setPass = process.env.VITE_PASS
+        this.setHost = process.env.VITE_MONGO_HOST
+        this.setCluster = process.env.VITE_CLUSTER
+        this.setDbName = process.env.VITE_DBNAME
         this.#open();
         this.db = this.conexion.db(this.getDbName);
     }

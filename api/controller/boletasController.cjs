@@ -1,13 +1,13 @@
-const peliculas = require("../model/peliculas")
-const boletas = require("../model/boletas");
-const usuarios = require("../model/usuarios")
-const salas = require("../model/salas")
-const funciones = require("../model/funciones")
-const boletasDto = require("../dto/boletasDto");
-const peliculasDto = require("../dto/peliculasDto")
-const usuariosDto = require("../dto/usuariosDto")
-const salasDto = require("../dto/salasDto")
-const funcionesDto = require("../dto/funcionesDto")
+const peliculas = require("../model/peliculas.cjs")
+const boletas = require("../model/boletas.cjs");
+const usuarios = require("../model/usuarios.cjs")
+const salas = require("../model/salas.cjs")
+const funciones = require("../model/funciones.cjs")
+const boletasDto = require("../dto/boletasDto.cjs");
+const peliculasDto = require("../dto/peliculasDto.cjs")
+const usuariosDto = require("../dto/usuariosDto.cjs")
+const salasDto = require("../dto/salasDto.cjs")
+const funcionesDto = require("../dto/funcionesDto.cjs")
 const { ObjectId } = require('mongodb');
 const {validationResult} = require("express-validator");
 

@@ -1,6 +1,6 @@
 const {validationResult} = require("express-validator");
-const peliculas = require("../model/peliculas");
-const peliculasDto = require("../dto/peliculasDto");
+const peliculas = require("../model/peliculas.cjs");
+const peliculasDto = require("../dto/peliculasDto.cjs");
 
 const listarTodasPeliculas = async(req, res) => {
     const errors = validationResult(req);

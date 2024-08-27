@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const {validationResult} = require("express-validator");
-const funciones = require("../model/funciones")
-const funcionesDto = require("../dto/funcionesDto")
+const funciones = require("../model/funciones.cjs")
+const funcionesDto = require("../dto/funcionesDto.cjs")
 
 const verificarAsientosDisponibles = async(req, res) => {
     const errors = validationResult(req);

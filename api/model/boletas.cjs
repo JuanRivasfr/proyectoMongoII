@@ -1,4 +1,4 @@
-const connect = require("../helpers/db/connect")
+const connect = require("../helpers/db/connect.cjs")
 const {ObjectId} = require("mongodb")
 
 module.exports = class boletas extends connect {
