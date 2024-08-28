@@ -1,16 +1,39 @@
 import './index.css'
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { CarruselPeliculas } from "./components/carruselPeliculas";
-
-export function AppIndex () {
-  return(
-    <>
-      <Header />
-      <Main />
-      <Footer />
-    </>
-  )
+import { MovieDetailasd } from "./movieDetail"
+import {CarruselPeliculasComingSoon} from "./components/carruselComing"
+export function AppIndex() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Main />} /> 
+        <Route path="/movie/:id" element={<MovieDetailasd />} /> 
+      </Routes>
+    </Router>
+  );
 }
+
+
+export const Main = () => (
+  <>
+    <Header />
+    <main>
+      <div id="mainInfoPeliculas">
+        <p>Now Playing</p>
+        <p>See all</p>
+      </div>
+      <CarruselPeliculas />
+      <div id='mainInfoPeliculas'>
+        <p>Coming Soon</p>
+        <p>See all</p>
+      </div>
+      <CarruselPeliculasComingSoon />
+    </main>
+    <Footer />
+  </>
+);
 
 export const Header = () => {
     return (
@@ -35,17 +58,6 @@ export const Header = () => {
         </div>
       </header>
     )
-}
-
-export const Main = () => {
-  return(
-  <main>
-    <div id="mainInfoPeliculas">
-      <p>Now Playing</p>
-      <p>See all</p>
-    </div>
-    <CarruselPeliculas />
-  </main>)
 }
 
 export const Footer = () => {
