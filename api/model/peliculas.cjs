@@ -59,7 +59,8 @@ module.exports = class peliculas extends connect {
                     genero: { $first: "$genero" }, 
                     duracion: { $first: "$duracion" }, 
                     sinopsis: { $first: "$sinopsis" }, 
-                    funciones: { $push: "$funciones" } 
+                    funciones: { $push: "$funciones" } ,
+                    imagen : {$first: "$imagen"}
                 }
             },
             {
