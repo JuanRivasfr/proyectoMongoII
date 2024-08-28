@@ -2,12 +2,52 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <link rel="stylesheet" href="src/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>CineCampus</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <header>
+      <div id="headerInfoUsuario">
+        <div id="headerInfoUsuarioFotoNombre">
+          <img src="./public/png-transparent-default-avatar-thumbnail-removebg-preview.png" alt="">
+          <div id="fotoNombreSaludo">
+            <small>Hi, Ferrucio Tuccine!</small>
+            <p>Let's watch movie together!</p>
+          </div>
+        </div>
+        <div id="headerInfoUsuarioNotificaciones">
+          <div id="notificacionesIcono">
+            <i class='bx bx-bell'></i>
+          </div>
+        </div>
+      </div>
+      <div id="headerBarraBusqueda">
+        <i class='bx bx-search'></i>
+        <input type="text" placeholder="Search movie, cinema, genre...">
+      </div>
+    </header>
+    <footer>
+      <div class="botonesIconos">
+        <i class='bx bx-home'></i>
+        <p>Home</p>
+      </div>
+      <div class="botonesIconos">
+        <i class='bx bx-search'></i>
+        <p>Browse</p>
+      </div>
+      <div class="botonesIconos">
+        <i class='bx bx-movie'></i>
+        <p>Tickets</p>
+      </div>
+      <div class="botonesIconos">
+        <i class='bx bx-user'></i>
+        <p>Profile</p>
+      </div>
+    </footer>
   </body>
 </html>
