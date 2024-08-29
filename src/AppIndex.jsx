@@ -5,13 +5,16 @@ import { CarruselPeliculas } from "./components/carruselPeliculas";
 import { DetallesPeliculas } from "./detalllesPeliculas"
 import {CarruselPeliculasComingSoon} from "./components/carruselComing"
 import { CompraAsientos } from "./compraAsientos"
+import {BoletasComprada} from "./boletasComprada"
+
 export function AppIndex() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Main />} /> 
         <Route path="/movie/:id" element={<DetallesPeliculas />} /> 
-        <Route path="/movie/boleto/:idasientos" element={<CompraAsientos />} /> 
+        <Route path="/movie/boleto/:idasientos" element={<CompraAsientos />} />
+        <Route path="/compra-completada" element={<BoletasComprada />} /> 
       </Routes>
     </Router>
   );

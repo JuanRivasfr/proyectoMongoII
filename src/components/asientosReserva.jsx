@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const ReservarAsientos = (id) => {
     const { peliculasId } = id
@@ -9,6 +10,7 @@ export const ReservarAsientos = (id) => {
     const [asientosDisponibles, setAsientosDisponibles] = useState([]);
     const [funcionHora, setFuncionHora] =  useState([]);
     const [funcionFecha, setFuncionFecha] =  useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAsientos = async () => {
@@ -217,6 +219,7 @@ export const ReservarAsientos = (id) => {
             if (response.ok) {
                 const result = await response.json();
                 console.log("Reserva guardada con éxito:", result);
+                 navigate('/compra-completada', { state: { payload } });
             } else {
                 console.error("Error al guardar la reserva:", response.status);
             }
