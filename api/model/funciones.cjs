@@ -39,7 +39,7 @@ module.exports = class funciones extends connect {
 
         let res = await this.collection.aggregate(
             [
-                {
+                {  
                   $match: {
                     _id: idFuncion
                   }

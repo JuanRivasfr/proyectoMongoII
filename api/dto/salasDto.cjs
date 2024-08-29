@@ -13,4 +13,11 @@ module.exports = class salasDto{
         }
     }
 
+    templatesErrorMostrarSalas(){
+        return {
+            status: 404,
+            data: "Ocurrio un error"
+        }
+    }
+
 }

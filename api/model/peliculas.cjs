@@ -45,7 +45,7 @@ module.exports = class peliculas extends connect {
                 }
             },
             {
-                        $unwind: "$funciones"    
+                    $unwind: "$funciones"    
             },
             {
                 $match: {
@@ -62,11 +62,6 @@ module.exports = class peliculas extends connect {
                     funciones: { $push: "$funciones" } ,
                     imagen : {$first: "$imagen"}
                 }
-            },
-            {
-            $project: {
-                "funciones._id" : 0
-            }
             }
         ]).toArray()
         return(res)    
