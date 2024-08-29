@@ -1,0 +1,169 @@
+#container-detallesPeliculas{
+    width: 100%;
+}
+
+#section-header-detallesPeliculas{
+    display: flex;
+    justify-content: space-around;
+    font-size: 21px;
+    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+
+    & i{
+        font-size: 28px;
+    }
+}
+
+#section-descripcion{
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+#container-descripcion-img{
+    width: 100%;
+    overflow: hidden;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+    }
+}
+
+#section-descripcion{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#container-titulo{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 15px;
+    margin-right: 15px;
+    align-items: center;
+}
+
+#titulo-genero{
+    & p:nth-child(1){
+        font-size:15px;
+    }
+
+    & p:nth-child(2){
+        font-size: 10px;
+    }
+}
+
+#watch-trailer{
+    display: flex;
+    align-items: center;
+    background-color: red;
+    width: fit-content;
+    height: fit-content;
+    font-size: 13px;
+    padding: 3px;
+    border-radius: 5px;
+
+    & i{
+        font-size: 17px;
+    }
+}
+
+#container-descripcion{
+    margin-left: 15px;
+    margin-right: 15px;
+    font-size: 13px;
+}
+
+#container-cast{
+    margin-left: 15px;
+    margin-right: 15px;
+
+    & p{
+        margin-bottom: 8px;
+    }
+
+}
+
+.container-componente-cast{
+    width: 100px;
+    padding-right: 3px;
+    padding-left: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.container-img{
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    overflow: hidden;
+
+    & img{
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+#container-cast-cast{
+    display: flex;
+    gap: 3px;
+}
+
+.container-actores{
+    margin-left: 5px;
+
+    & p:nth-child(1){
+        font-size: 15px;
+    }
+
+    & p:nth-child(2){
+        font-size: 12px;
+    }
+}
+
+#container-cinema{
+    margin-left: 15px;
+    margin-right: 15px;
+
+    & p:nth-child(1){
+        margin-bottom: 8px;
+    }
+}
+
+#cinema-container-cinema{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #212121;
+    padding: 5px 0 5px 15px;
+    border-radius: 10px;
+}
+
+#container-img-cinemark{
+    width: 85px;
+    & img{
+        width: 100%;
+    }
+}
+
+#container-booknow{
+    margin-left: 15px;
+    margin-right: 15px;
+    text-align: center;
+    background-color: red;
+    padding: 15px;
+    border-radius: 10px;
+}

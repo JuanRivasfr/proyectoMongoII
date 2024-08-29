@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Slider from 'react-slick';
 import "../cssComponents/carruselComing.css";
 
 export const CarruselPeliculasComingSoon = () => {
@@ -18,10 +17,7 @@ export const CarruselPeliculasComingSoon = () => {
 
         fetchPeliculas();
     }, []);
-
-    console.log(peliculas);
     
-
     return (
         <div className='carrusel-container-coming'>
                 {peliculas.map(val => (

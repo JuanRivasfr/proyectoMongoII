@@ -2,14 +2,16 @@ import './index.css'
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { CarruselPeliculas } from "./components/carruselPeliculas";
-import { MovieDetailasd } from "./movieDetail"
+import { DetallesPeliculas } from "./detalllesPeliculas"
 import {CarruselPeliculasComingSoon} from "./components/carruselComing"
+import { CompraAsientos } from "./compraAsientos"
 export function AppIndex() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Main />} /> 
-        <Route path="/movie/:id" element={<MovieDetailasd />} /> 
+        <Route path="/movie/:id" element={<DetallesPeliculas />} /> 
+        <Route path="/movie/boleto/:idasientos" element={<CompraAsientos />} /> 
       </Routes>
     </Router>
   );
